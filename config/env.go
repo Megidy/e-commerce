@@ -11,6 +11,7 @@ type Config struct {
 	DBProtocol string
 	DB         string
 	DBPort     string
+	Secret     string
 }
 
 func InitConfig() *Config {
@@ -21,6 +22,7 @@ func InitConfig() *Config {
 		DBProtocol: GetEnv("DB_PROTOCOL"),
 		DB:         GetEnv("DB"),
 		DBPort:     GetEnv("DB_PORT"),
+		Secret:     GetEnv("SECRET"),
 	}
 }
 
