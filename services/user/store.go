@@ -17,8 +17,8 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) CreateUser(user *types.User) error {
-	_, err := s.db.Exec("insert into users(id,name,lastname,email,password) values(?,?,?,?,?)",
-		user.ID, user.Name, user.LastName, user.Email, user.Password)
+	_, err := s.db.Exec("insert into users(id,name,lastname,email,password,role) values(?,?,?,?,?,?)",
+		user.ID, user.Name, user.LastName, user.Email, user.Password, user.Role)
 	if err != nil {
 		return err
 	}
@@ -39,5 +39,35 @@ func (s *Store) AlreadyExists(user *types.User) (bool, error) {
 	if email == user.Email {
 		return true, nil
 	}
-	return true, nil
+	return false, nil
+}
+func (s *Store) GetUserByEmail(email string) (types.User, error) {
+	var u types.User
+	row, err := s.db.Query("select * from users where email=?", email)
+	if err != nil {
+		return types.User{}, err
+	}
+	for row.Next() {
+		err = row.Scan(&u.ID, &u.Name, &u.LastName, &u.Email, &u.Password, &u.Created, &u.Role)
+		if err != nil {
+			return types.User{}, err
+		}
+	}
+	return u, nil
+
+}
+func (s *Store) GetUserById(ID string) (types.User, error) {
+	var u types.User
+	row, err := s.db.Query("select * from users where id=?", ID)
+	if err != nil {
+		return types.User{}, err
+	}
+	for row.Next() {
+		err = row.Scan(&u.ID, &u.Name, &u.LastName, &u.Email, &u.Password, &u.Created, &u.Role)
+		if err != nil {
+			return types.User{}, err
+		}
+	}
+	return u, nil
+
 }
