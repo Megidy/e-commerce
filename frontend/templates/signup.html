@@ -3,137 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>Sign Up</title>
     <style>
         body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5; /* Light background */
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #1E2A38; /* Темно-синій фон */
-            color: #FFFFFF;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100vh; /* Full height */
+            color: #4a2c5a; /* Chinese Violet for text */
         }
-
-        .registration-container {
-            background-color: #ffffff;
-            color: #1E2A38; /* Темно-синій текст */
-            width: 400px;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: #1E2A38; /* Темно-синій */
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-group label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .input-group input {
+        .container {
+            max-width: 400px;
             width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d1d1;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 20px;
+            background-color: #ffffff; /* Snow color */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box; /* Ensure padding is included in width */
         }
-
-        .input-group input:focus {
-            border-color: #1E2A38;
-            outline: none;
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #4a2c5a; /* Chinese Violet */
         }
-
-        .submit-btn {
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #4a2c5a; /* Chinese Violet */
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 22px); /* Adjust width to accommodate padding */
+            padding: 10px; /* Slightly reduced padding */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensure padding is included in width */
+        }
+        .btn {
             width: 100%;
             padding: 12px;
-            background-color: #1E2A38; /* Темно-синя кнопка */
-            color: #ffffff;
+            background-color: #4a2c5a; /* Chinese Violet */
+            color: #ffffff; /* White text */
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 16px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
-
-        .submit-btn:hover {
-            background-color: #16202A; /* Темніший відтінок на ховер */
+        .btn:hover {
+            background-color: #3d2349; /* Darker shade of Chinese Violet */
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            color: #fff;
+        }
+        .response {
+            background-color: #dc3545; /* Danger alert color */
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            margin-top: 15px;
+            color: #4a2c5a; /* Chinese Violet */
+        }
+        a {
+            color: #4a2c5a; /* Chinese Violet */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="registration-container">
-        <h1>Sign Up</h1>
-        <form method="POST" action="/signup">
-            <div class="input-group">
-                <label for="name">First Name</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="input-group">
-                <label for="lastname">Last Name</label>
-                <input type="text" id="lastname" name="lastname" required>
-            </div>
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="submit-btn">Register</button>
-        </form>
+
+<div class="container">
+    <h2>Sign Up</h2>
+    <div>
+        {{ if .Response }}
+            <div class="response">{{ .Response }}</div>
+        {{ end }}
+        {{ if .Error }}
+            <div class="error">{{ .Error }}</div>
+        {{ end }}
     </div>
+    <form method="POST" action="/signup">
+        <div class="form-group">
+            <label for="name">First Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" name="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="/login">Log In</a></p>
+
+    <script>
+        const form = document.querySelector('form');
+    
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: form.name.value,
+                    lastname: form.lastname.value,
+                    email: form.email.value,
+                    password: form.password.value,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+                
+            })
+            .then(data => {
+                const messageContainer = document.createElement('div');
+                messageContainer.textContent = data.message; 
+                messageContainer.className = 'message'; 
+                document.body.appendChild(messageContainer);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    
+    </script>
+</div>
+
 </body>
-<script>
-    const form = document.querySelector('form');
-
-form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    fetch(form.action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            name: form.name.value,
-            lastname: form.lastname.value,
-            email: form.email.value,
-            password: form.password.value,
-        }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-        
-    })
-    .then(data => {
-       
-        const messageContainer = document.createElement('div');
-        messageContainer.textContent = data.message; 
-        messageContainer.className = 'message'; 
-        document.body.appendChild(messageContainer);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
-
-</script>
 </html>
