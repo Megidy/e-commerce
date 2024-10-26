@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Megidy/e-commerce/config"
 	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/types"
 	"github.com/gin-gonic/gin"
@@ -22,9 +23,8 @@ func NewHandler(response types.LoadResponse, userStore types.UserStore) *Handler
 	}
 }
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
-	router.GET("/signup", h.SignUp)
-	router.POST("/signup", h.SignUp)
-
+	router.Any("/signup", h.SignUp)
+	router.Any("/login", h.LogIn)
 }
 func (h *Handler) SignUp(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
@@ -73,7 +73,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 
 		if ok {
 			h.response.LoadResponse(c, http.StatusBadRequest, "signup.html", gin.H{
-				"Response": "Email is already in use",
+				"Message": "Email is already in use",
 			})
 			return
 		}
@@ -86,6 +86,55 @@ func (h *Handler) SignUp(c *gin.Context) {
 			return
 		}
 
-		c.Redirect(http.StatusSeeOther, "/products")
+		c.Redirect(http.StatusSeeOther, "/login")
 	}
+}
+
+func (h *Handler) LogIn(c *gin.Context) {
+	if c.Request.Method == http.MethodGet {
+		h.response.LoadResponse(c, http.StatusOK, "login.html", nil)
+	} else if c.Request.Method == http.MethodPost {
+		var logInPayload types.LogInPayload
+		c.ShouldBindJSON(&logInPayload)
+		ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
+		if err != nil {
+			h.response.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
+				"Error": err.Error(),
+			})
+			return
+		}
+		if !ok {
+			h.response.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
+				"Message": "no user with this email found ",
+			})
+			return
+		} else if ok {
+			user, err := h.userStore.GetUserByEmail(logInPayload.Email)
+			if err != nil {
+				h.response.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
+					"Error": err.Error(),
+				})
+				return
+			}
+			ok := auth.ComparePassword(user.Password, logInPayload.Password)
+			if !ok {
+				h.response.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
+					"Error": "Invlid data sent",
+				})
+				return
+			}
+
+			config := config.InitConfig()
+			secret, err := auth.CreateJWT([]byte(config.Secret), user.ID)
+			if err != nil {
+				h.response.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
+					"Error": err.Error(),
+				})
+				return
+			}
+			log.Println(secret)
+			log.Println("user logged in")
+		}
+	}
+
 }
