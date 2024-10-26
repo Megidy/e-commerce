@@ -6,6 +6,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
     restart: always
@@ -19,3 +22,5 @@ services:
     depends_on:
       - mysql
     command: ["/api"]   
+volumes:
+  db_data:
