@@ -17,5 +17,6 @@ FROM alpine
 WORKDIR /
 
 COPY --from=builder /app/api /api
+COPY --from=builder /app/frontend /frontend 
 
 CMD ["/api"]
