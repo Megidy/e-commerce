@@ -3,9 +3,9 @@ package auth
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
+	"github.com/Megidy/e-commerce/config"
 	"github.com/Megidy/e-commerce/types"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -51,7 +51,8 @@ func ValidateJWT(tokenString string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf(" Unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(os.Getenv("SECRET")), nil
+		config := config.InitConfig()
+		return []byte(config.Secret), nil
 	})
 }
 
