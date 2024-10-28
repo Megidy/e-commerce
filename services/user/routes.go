@@ -83,55 +83,58 @@ func (h *Handler) LoadSignUpHTML(c *gin.Context) {
 	h.templates.ExecuteTemplate(c, "frontend/templates/signup.html", nil)
 }
 func (h *Handler) LoadLogInHTML(c *gin.Context) {
-
+	h.templates.ExecuteTemplate(c, "frontend/templates/login.html", nil)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
-	if c.Request.Method == http.MethodGet {
-		h.templates.LoadResponse(c, http.StatusOK, "login.html", nil)
-	} else if c.Request.Method == http.MethodPost {
-		var logInPayload types.LogInPayload
-		c.ShouldBindJSON(&logInPayload)
-		ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
-		if err != nil {
-			h.templates.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
-				"Error": err.Error(),
-			})
-			return
-		}
-		if !ok {
-			h.templates.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
-				"Message": "no user with this email found ",
-			})
+	var logInPayload types.LogInPayload
 
-			return
-		} else if ok {
-			user, err := h.userStore.GetUserByEmail(logInPayload.Email)
-			if err != nil {
-				h.templates.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
-					"Error": err.Error(),
-				})
-				return
-			}
-			ok := auth.ComparePassword(user.Password, logInPayload.Password)
-			if !ok {
-				h.templates.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
-					"Error": "Invlid data sent",
-				})
-				return
-			}
+	logInPayload.Email = h.templates.GetDataFromForm(c, "email")
+	logInPayload.Password = h.templates.GetDataFromForm(c, "password")
 
-			config := config.InitConfig()
-			secret, err := auth.CreateJWT([]byte(config.Secret), user.ID)
-			if err != nil {
-				h.templates.LoadResponse(c, http.StatusBadRequest, "login.html", gin.H{
-					"Error": err.Error(),
-				})
-				return
-			}
-			log.Println(secret)
-			log.Println("user logged in")
-		}
+	log.Println(logInPayload)
+
+	ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
+	if err != nil {
+		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
 	}
+	if !ok {
+		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+			"Message": "User not found",
+		})
+		return
+	} else if ok {
+		user, err := h.userStore.GetUserByEmail(logInPayload.Email)
+		if err != nil {
+			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+				"Message": "User not found",
+			})
+			return
+		}
 
+		ok := auth.ComparePassword(user.Password, logInPayload.Password)
+		if !ok {
+			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+				"Message": "Invalid data",
+			})
+			return
+		}
+		config := config.InitConfig()
+		secret, err := auth.CreateJWT([]byte(config.Secret), user.ID)
+		if err != nil {
+			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+				"Message": err.Error(),
+			})
+			return
+		}
+		log.Println(secret)
+		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
+			"Message": "Successfuly logged in",
+		})
+		c.SetSameSite(http.SameSiteLaxMode)
+		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
+	}
 }
