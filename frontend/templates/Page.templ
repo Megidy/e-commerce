@@ -1,5 +1,4 @@
 package templates
-
 templ Page(nav bool) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -13,7 +12,8 @@ templ Page(nav bool) {
             if nav{
                 <nav >
 					<a href="/products">product</a>
-					<a href="/Account" >account</a>
+
+					<a href="/user" >account</a>
 				</nav>
             }
             {children... }
