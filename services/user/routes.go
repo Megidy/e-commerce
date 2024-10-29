@@ -28,6 +28,7 @@ func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
 	router.POST("/login/enter", h.LogIn)
+	router.GET("/user", auth.NewHandler(h.userStore).WithJWT, h.UserAccount)
 
 }
 
@@ -117,4 +118,10 @@ func (h *Handler) LogIn(c *gin.Context) {
 		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
 
 	}
+}
+func (h *Handler) UserAccount(c *gin.Context) {
+	u, _ := c.Get("user")
+	user := u.(types.User)
+	log.Println(user)
+	templates.UserAccount(user).Render(c.Request.Context(), c.Writer)
 }
