@@ -35,7 +35,7 @@ func (h *Handler) WithJWT(c *gin.Context) {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-		id := claims["userId"].(string)
+		id := claims["userID"].(string)
 		user, err := h.UserStore.GetUserById(id)
 		if err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
