@@ -24,9 +24,10 @@ func NewApiServer(addr string, db *sql.DB) *APIServer {
 func (s *APIServer) Run() error {
 
 	router := gin.Default()
-	router.LoadHTMLGlob("./frontend/templates/*.html")
-	NewResponseHandler := response.NewResponseHandler()
-
+	// router.LoadHTMLGlob("./frontend/templates/*.html")
+	NewResponseHandler := response.NewTemplateHandler()
+	router.RedirectFixedPath = true
+	router.RedirectTrailingSlash = true
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(NewResponseHandler, userStore)
 	userHandler.RegisterRoutes(router)
