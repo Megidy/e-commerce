@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Megidy/e-commerce/config"
+	"github.com/Megidy/e-commerce/frontend/templates"
 	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/types"
 	"github.com/gin-gonic/gin"
@@ -23,9 +24,9 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 	}
 }
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
-	router.GET("/signup", h.LoadSignUpHTML)
+	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
-	router.GET("/login", h.LoadLogInHTML)
+	router.GET("/login", h.LoadLogInTemplate)
 	router.POST("/login/enter", h.LogIn)
 
 }
@@ -40,22 +41,16 @@ func (h *Handler) SignUp(c *gin.Context) {
 	log.Println(payload)
 	ok, err := h.userStore.AlreadyExists(&types.User{Email: payload.Email})
 	if err != nil {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/signup.html", map[string]any{
-			"Message": err.Error(),
-		})
+		templates.Signup(true, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 	if ok {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/signup.html", map[string]any{
-			"Message": "Email is already taken",
-		})
+		templates.Signup(true, "user already exists").Render(c.Request.Context(), c.Writer)
 		return
 	}
 	hashedPassword, err := auth.HashPassword(payload.Password)
 	if err != nil {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/signup.html", map[string]any{
-			"Message": err.Error(),
-		})
+		templates.Signup(true, "failed to hash password").Render(c.Request.Context(), c.Writer)
 		return
 	}
 	user = types.User{
@@ -68,22 +63,18 @@ func (h *Handler) SignUp(c *gin.Context) {
 	}
 	err = h.userStore.CreateUser(&user)
 	if err != nil {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/signup.html", map[string]any{
-			"Message": err.Error(),
-		})
+		templates.Signup(true, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 
-	h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/signup.html", map[string]any{
-		"Message": "User Signed In",
-	})
+	c.Writer.Header().Add("HX-Redirect", "/login")
 }
 
-func (h *Handler) LoadSignUpHTML(c *gin.Context) {
-	h.templates.ExecuteTemplate(c, "frontend/templates/signup.html", nil)
+func (h *Handler) LoadSignUpTemplate(c *gin.Context) {
+	templates.Signup(true, "").Render(c.Request.Context(), c.Writer)
 }
-func (h *Handler) LoadLogInHTML(c *gin.Context) {
-	h.templates.ExecuteTemplate(c, "frontend/templates/login.html", nil)
+func (h *Handler) LoadLogInTemplate(c *gin.Context) {
+	templates.Login(true, "").Render(c.Request.Context(), c.Writer)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
@@ -96,45 +87,34 @@ func (h *Handler) LogIn(c *gin.Context) {
 
 	ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
 	if err != nil {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-			"Message": err.Error(),
-		})
+		templates.Login(true, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 	if !ok {
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-			"Message": "User not found",
-		})
+		templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
 		return
 	} else if ok {
 		user, err := h.userStore.GetUserByEmail(logInPayload.Email)
 		if err != nil {
-			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-				"Message": "User not found",
-			})
+			templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
 		ok := auth.ComparePassword(user.Password, logInPayload.Password)
 		if !ok {
-			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-				"Message": "Invalid data",
-			})
+			templates.Login(true, "Invalid data").Render(c.Request.Context(), c.Writer)
 			return
 		}
 		config := config.InitConfig()
 		secret, err := auth.CreateJWT([]byte(config.Secret), user.ID)
 		if err != nil {
-			h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-				"Message": err.Error(),
-			})
+			templates.Login(true, err.Error()).Render(c.Request.Context(), c.Writer)
 			return
 		}
+		c.Writer.Header().Add("HX-Redirect", "/products")
 		log.Println(secret)
-		h.templates.ExecuteSpecificTemplate(c, "message-after-submit", "frontend/templates/login.html", map[string]any{
-			"Message": "Successfuly logged in",
-		})
 		c.SetSameSite(http.SameSiteLaxMode)
 		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
+
 	}
 }
