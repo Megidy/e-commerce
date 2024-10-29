@@ -1,0 +1,14 @@
+package templates
+
+import "github.com/Megidy/e-commerce/types"
+
+templ UserAccount(user types.User) {
+	@Page(true)
+	<html>
+        <h1>{user.Name}</h1>
+        <h1>{user.LastName}</h1>
+        <h1>{user.Email}</h1>
+        <h1>{user.Password}</h1>
+        <h1>{user.Role}</h1>
+    </html>
+}
