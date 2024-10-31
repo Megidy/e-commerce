@@ -10,3 +10,23 @@ CREATE TABLE IF NOT EXISTS users (
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role VARCHAR(255) NOT NULL 
 );
+CREATE TABLE IF NOT EXISTS accessories(
+    id VARCHAR(36) PRIMARY KEY,  
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,   
+    quantity INT NOT NULL,
+    price FLOAT NOT NULL,
+    image VARCHAR(255)
+);
+CREATE TABLE IF NOT EXISTS bicycles(
+    id VARCHAR(36) PRIMARY KEY,  
+    name VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    size VARCHAR(255) NOT NULL,   
+    material VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    price FLOAT NOT NULL,
+    image VARCHAR(255)
+);
