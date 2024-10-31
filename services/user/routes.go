@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Megidy/e-commerce/config"
-	"github.com/Megidy/e-commerce/frontend/templates"
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
 	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/types"
 	"github.com/gin-gonic/gin"
