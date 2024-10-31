@@ -37,3 +37,14 @@ type Templates interface {
 	ExecuteSpecificTemplate(c *gin.Context, name, filePath string, data map[string]any) error
 	GetDataFromForm(c *gin.Context, key string) string
 }
+type ProductStore interface {
+	GetAllAccessories() ([]Accessory, error)
+}
+type Accessory struct {
+	Id          string
+	Name        string
+	Description string
+	Quantity    int
+	Price       float32
+	Image       string
+}
