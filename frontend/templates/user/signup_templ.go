@@ -8,7 +8,7 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Login(hasMessage bool, message string) templ.Component {
+func Signup(hasMessage bool, message string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -33,7 +33,7 @@ func Login(hasMessage bool, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>LogIn</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script></head><body><div class=\"login\"><form hx-post=\"/login/enter/\"><div class=\"form-group\"><label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required></div><div class=\"form-group\"><label for=\"password\">Password</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn\">LogIn</button><div><a href=\"/signup\">Dont have account yet</a>.<br></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Sign Up</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script></head><body><div class=\"signup\"><form hx-post=\"/signup/create\"><div class=\"form-group\"><label for=\"name\">First Name</label> <input type=\"text\" id=\"name\" name=\"name\" required></div><div class=\"form-group\"><label for=\"lastname\">Last Name</label> <input type=\"text\" id=\"lastname\" name=\"lastName\" required></div><div class=\"form-group\"><label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required></div><div class=\"form-group\"><label for=\"password\">Password</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn\">Sign Up</button><div><a href=\"/login\">Already have an account?</a>.<br></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -45,7 +45,7 @@ func Login(hasMessage bool, message string) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/login.templ`, Line: 28, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/user/signup.templ`, Line: 36, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
