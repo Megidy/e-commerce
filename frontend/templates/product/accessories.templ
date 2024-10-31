@@ -1,0 +1,34 @@
+package templates
+
+import "github.com/Megidy/e-commerce/types"
+import "strconv"
+import "fmt"
+import "github.com/Megidy/e-commerce/frontend/templates/user"
+
+templ LoadAccessories(accessories []types.Accessory) {
+    @templates.Page(true)
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Accessories</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+			<div>
+                <ul>
+                    for _,acc := range accessories{
+                        <li>{acc.Id}</li>
+                        <li> {acc.Name}</li>
+                        <li> {acc.Description}</li>
+                        <li>{strconv.Itoa(acc.Quantity)}</li>
+                        <li>{strconv.Itoa(int(acc.Price))}</li>   
+                        <img src={fmt.Sprintf(acc.Image)}>
+                        
+                    }
+                </ul>
+            </div>
+		</body>
+	</html>
+}
