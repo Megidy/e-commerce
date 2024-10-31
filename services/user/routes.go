@@ -24,7 +24,6 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 	}
 }
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
-	router.GET("/", h.LoadSignUpTemplate)
 	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
@@ -120,14 +119,9 @@ func (h *Handler) LogIn(c *gin.Context) {
 
 	}
 }
-
 func (h *Handler) UserAccount(c *gin.Context) {
 	u, _ := c.Get("user")
-
-	user, ok := u.(types.User)
-	if !ok {
-		log.Println("Failed to assert user type")
-	}
-	log.Println("User:", user)
+	user := u.(types.User)
+	log.Println(user)
 	templates.UserAccount(user).Render(c.Request.Context(), c.Writer)
 }
