@@ -34,7 +34,7 @@ func Page(nav bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if nav {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><a href=\"/products\">product</a> <a href=\"/user\">account</a></nav>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><a href=\"/products/accessories\">Accessories</a> <a href=\"/products/bicycles\">bicycles</a> <a href=\"/orders\">Your Orders</a> <a href=\"/overall\">Overall about bicycles</a> <a href=\"/tech-support\">Tech-Support</a> <a href=\"/user\">account</a></nav>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
