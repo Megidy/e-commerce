@@ -60,3 +60,36 @@ func (s *Store) GetAllBicycles() ([]types.Bicycle, error) {
 	log.Println(bicycles)
 	return bicycles, nil
 }
+
+func (s *Store) GetSignleBicycle(id string) (types.Bicycle, error) {
+	var b types.Bicycle
+	row, err := s.db.Query("select * from bicycles where id =?", id)
+	if err != nil {
+		return types.Bicycle{}, err
+	}
+	for row.Next() {
+
+		err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+		if err != nil {
+			return types.Bicycle{}, err
+
+		}
+	}
+	return b, nil
+}
+func (s *Store) GetSingleAccessory(id string) (types.Accessory, error) {
+	var a types.Accessory
+	row, err := s.db.Query("select * from accessories where id =?", id)
+	if err != nil {
+		return types.Accessory{}, err
+	}
+	for row.Next() {
+
+		err := row.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Image)
+		if err != nil {
+			return types.Accessory{}, err
+
+		}
+	}
+	return a, nil
+}
