@@ -37,3 +37,26 @@ func (s *Store) GetAllAccessories() ([]types.Accessory, error) {
 	log.Println(accessories)
 	return accessories, nil
 }
+
+func (s *Store) GetAllBicycles() ([]types.Bicycle, error) {
+	var bicycles []types.Bicycle
+	rows, err := s.db.Query("select * from bicycles")
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	for rows.Next() {
+		var b types.Bicycle
+		err := rows.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, nil
+			}
+			log.Println(err)
+			return nil, err
+		}
+		bicycles = append(bicycles, b)
+	}
+	log.Println(bicycles)
+	return bicycles, nil
+}
