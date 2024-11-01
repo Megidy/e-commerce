@@ -112,7 +112,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 			templates.Login(true, err.Error()).Render(c.Request.Context(), c.Writer)
 			return
 		}
-		c.Writer.Header().Add("HX-Redirect", "/products")
+		c.Writer.Header().Add("HX-Redirect", "/products/accessories")
 		log.Println(secret)
 		c.SetSameSite(http.SameSiteLaxMode)
 		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
