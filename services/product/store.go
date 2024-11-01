@@ -61,7 +61,7 @@ func (s *Store) GetAllBicycles() ([]types.Bicycle, error) {
 	return bicycles, nil
 }
 
-func (s *Store) GetSignleBicycle(id string) (types.Bicycle, error) {
+func (s *Store) GetBicycleById(id string) (types.Bicycle, error) {
 	var b types.Bicycle
 	row, err := s.db.Query("select * from bicycles where id =?", id)
 	if err != nil {
@@ -77,7 +77,7 @@ func (s *Store) GetSignleBicycle(id string) (types.Bicycle, error) {
 	}
 	return b, nil
 }
-func (s *Store) GetSingleAccessory(id string) (types.Accessory, error) {
+func (s *Store) GetAccessoryById(id string) (types.Accessory, error) {
 	var a types.Accessory
 	row, err := s.db.Query("select * from accessories where id =?", id)
 	if err != nil {

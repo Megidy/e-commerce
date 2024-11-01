@@ -23,8 +23,8 @@ func NewHandler(userStore types.UserStore, productStore types.ProductStore) *Han
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.GET("/products/accessories", h.GetAllAccessories)
 	router.GET("/products/bicycles/", h.GetAllBicycles)
-	router.GET("/products/accessories/:accessoryID", h.GetSingleAccessory)
-	router.GET("/products/bicycle/:bicycleID", h.GetSignleBicycle)
+	router.GET("/products/accessories/:accessoryID", h.GetAccessoryById)
+	router.GET("/products/bicycle/:bicycleID", h.GetBicycleById)
 }
 
 func (h *Handler) GetAllAccessories(c *gin.Context) {
@@ -44,16 +44,15 @@ func (h *Handler) GetAllBicycles(c *gin.Context) {
 	templates.LoadBicycles(bicycles).Render(c.Request.Context(), c.Writer)
 }
 
-func (h *Handler) GetSignleBicycle(c *gin.Context) {
+func (h *Handler) GetBicycleById(c *gin.Context) {
 
 }
-func (h *Handler) GetSingleAccessory(c *gin.Context) {
+func (h *Handler) GetAccessoryById(c *gin.Context) {
 	id := c.Param("accessoryID")
-	accessory, err := h.productStore.GetSingleAccessory(id)
+	accessory, err := h.productStore.GetAccessoryById(id)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 	templates.LoadSingleAccessory(accessory).Render(c.Request.Context(), c.Writer)
-
 }
