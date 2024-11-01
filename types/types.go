@@ -40,6 +40,8 @@ type Templates interface {
 type ProductStore interface {
 	GetAllAccessories() ([]Accessory, error)
 	GetAllBicycles() ([]Bicycle, error)
+	GetBicycleById(id string) (Bicycle, error)
+	GetAccessoryById(id string) (Accessory, error)
 }
 type Accessory struct {
 	Id          string
