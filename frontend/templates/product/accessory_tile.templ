@@ -1,0 +1,26 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ AccessoryTile(accessory *types.Accessory) {
+	<li
+		id={ fmt.Sprintf("accessory-%s", accessory.Id) }
+	>
+        <a href={templ.URL(fmt.Sprintf("/products/accessories/%s",accessory.Id))}>
+        <span>
+			<img
+				src={ accessory.Image}
+			/>
+			{ accessory.Name }
+			<br/>
+			Price : { fmt.Sprintf("%f",accessory.Price) }
+		</span>
+        </a>
+        <button>
+            Add to cart
+        </button>
+	</li>
+}
