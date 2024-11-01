@@ -22,6 +22,7 @@ func NewHandler(userStore types.UserStore, productStore types.ProductStore) *Han
 
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.GET("/products/accessories", h.GetAllAccessories)
+	router.GET("/products/bicycles", h.GetAllBicycles)
 }
 
 func (h *Handler) GetAllAccessories(c *gin.Context) {
@@ -31,4 +32,12 @@ func (h *Handler) GetAllAccessories(c *gin.Context) {
 		return
 	}
 	templates.LoadAccessories(accessories).Render(c.Request.Context(), c.Writer)
+}
+func (h *Handler) GetAllBicycles(c *gin.Context) {
+	bicycles, err := h.productStore.GetAllBicycles()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	templates.LoadBicycles(bicycles).Render(c.Request.Context(), c.Writer)
 }
