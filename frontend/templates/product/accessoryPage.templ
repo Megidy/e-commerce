@@ -1,0 +1,30 @@
+package templates
+
+import (
+	"fmt"
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ LoadSingleAccessory(accessory types.Accessory) {
+	@templates.Page(true)
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Accessories</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+			<div>
+				<img src={ accessory.Image }/>
+				<p>Name : { accessory.Name }</p>
+				<p>Description : { accessory.Description }</p>
+				<p>Quantity : { fmt.Sprintf("%d",accessory.Quantity) }</p>
+				<p>Price : { fmt.Sprintf("%f",accessory.Price) }</p>
+			</div>
+		</body>
+	</html>
+}
+    
