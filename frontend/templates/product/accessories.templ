@@ -1,8 +1,6 @@
 package templates
 
 import "github.com/Megidy/e-commerce/types"
-import "strconv"
-import "fmt"
 import "github.com/Megidy/e-commerce/frontend/templates/user"
 
 templ LoadAccessories(accessories []types.Accessory) {
@@ -19,13 +17,7 @@ templ LoadAccessories(accessories []types.Accessory) {
 			<div>
                 <ul>
                     for _,acc := range accessories{
-                        <li>{acc.Id}</li>
-                        <li> {acc.Name}</li>
-                        <li> {acc.Description}</li>
-                        <li>{strconv.Itoa(acc.Quantity)}</li>
-                        <li>{strconv.Itoa(int(acc.Price))}</li>   
-                        <img src={fmt.Sprintf(acc.Image)}>
-                        
+                        @AccessoryTile(&acc)
                     }
                 </ul>
             </div>
