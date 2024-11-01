@@ -39,11 +39,25 @@ type Templates interface {
 }
 type ProductStore interface {
 	GetAllAccessories() ([]Accessory, error)
+	GetAllBicycles() ([]Bicycle, error)
 }
 type Accessory struct {
 	Id          string
 	Name        string
 	Description string
+	Quantity    int
+	Price       float32
+	Image       string
+}
+
+type Bicycle struct {
+	Id          string
+	Name        string
+	Model       string
+	Description string
+	Type        string
+	Size        string
+	Material    string
 	Quantity    int
 	Price       float32
 	Image       string
