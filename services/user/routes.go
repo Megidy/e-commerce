@@ -72,10 +72,10 @@ func (h *Handler) SignUp(c *gin.Context) {
 }
 
 func (h *Handler) LoadSignUpTemplate(c *gin.Context) {
-	templates.Signup(true, "").Render(c.Request.Context(), c.Writer)
+	templates.Signup(false, "").Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) LoadLogInTemplate(c *gin.Context) {
-	templates.Login(true, "").Render(c.Request.Context(), c.Writer)
+	templates.Login(false, "").Render(c.Request.Context(), c.Writer)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
