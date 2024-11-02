@@ -25,6 +25,7 @@ func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.GET("/products/bicycles/", h.GetAllBicycles)
 	router.GET("/products/accessories/:accessoryID", h.GetAccessoryById)
 	router.GET("/products/bicycle/:bicycleID", h.GetBicycleById)
+	router.GET("/products/accessory/:accessoryID", h.GetAccessoryById)
 }
 
 func (h *Handler) GetAllAccessories(c *gin.Context) {
@@ -45,7 +46,13 @@ func (h *Handler) GetAllBicycles(c *gin.Context) {
 }
 
 func (h *Handler) GetBicycleById(c *gin.Context) {
-
+	id := c.Param("bicycleID")
+	bicycle, err := h.productStore.GetBicycleById(id)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	templates.LoadSingleBicycle(bicycle).Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) GetAccessoryById(c *gin.Context) {
 	id := c.Param("accessoryID")
