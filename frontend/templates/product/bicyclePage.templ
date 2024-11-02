@@ -1,0 +1,34 @@
+package templates
+
+import (
+	"fmt"
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ LoadSingleBicycle(bicycle types.Bicycle) {
+	@templates.Page(true)
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Accessory</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+			<div>
+				<img src={ bicycle.Image }/>
+				<p>Name : { bicycle.Name }</p>
+				<p>Model : {bicycle.Model}</p>
+				<p>Description : { bicycle.Description }</p>
+				<p>Type : {bicycle.Type}</p>
+				<p>Size : {bicycle.Size}</p>
+				<p>Material {bicycle.Material}</p>
+				<p>Quantity : { fmt.Sprintf("%d",bicycle.Quantity) }</p>
+				<p>Price : { fmt.Sprintf("%f",bicycle.Price) }</p>
+			</div>
+		</body>
+	</html>
+}
+    
