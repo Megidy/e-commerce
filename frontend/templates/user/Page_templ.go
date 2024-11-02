@@ -29,12 +29,12 @@ func Page(nav bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Gear Up</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script></head><body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Gear Up</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script><style>\r\n                body {\r\n                    font-family: Arial, sans-serif;\r\n                    margin: 0;\r\n                    padding: 0;\r\n                    display: flex;\r\n                    flex-direction: column;\r\n                    min-height: 100vh;\r\n                }\r\n                nav {\r\n                    background-color: #2A9D8F; \r\n                    padding: 15px;\r\n                    display: flex;\r\n                    justify-content: center;\r\n                    flex-wrap: wrap;\r\n                }\r\n                nav a {\r\n                    color: #CAD2C5;\r\n                    text-decoration: none;\r\n                    margin: 10px 15px;\r\n                    font-size: 18px;\r\n                    font-weight: bold; \r\n                }\r\n                nav a:hover {\r\n                    color: #FFF;\r\n                }\r\n                @media (max-width: 600px) {\r\n                    nav {\r\n                        flex-direction: column;\r\n                        align-items: center;\r\n                    }\r\n                    nav a {\r\n                        margin: 10px 0;\r\n                        font-size: 16px; \r\n                        font-weight: bold; \r\n                    }\r\n                }\r\n            </style></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if nav {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><a href=\"/products/accessories\">Accessories</a> <a href=\"/products/bicycles\">bicycles</a> <a href=\"/orders\">Your Orders</a> <a href=\"/overall\">Overall about bicycles</a> <a href=\"/tech-support\">Tech-Support</a> <a href=\"/user\">account</a></nav>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><a href=\"/products/accessories\">Accessories</a> <a href=\"/products/bicycles\">Bicycles</a> <a href=\"/orders\">Your Orders</a> <a href=\"/overall\">Overall about Bicycles</a> <a href=\"/tech-support\">Tech-Support</a> <a href=\"/user\">Account</a></nav>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
