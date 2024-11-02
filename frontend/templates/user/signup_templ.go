@@ -29,34 +29,31 @@ func Signup(hasMessage bool, message string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = Page(true).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Sign Up</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script></head><body><div class=\"signup\"><form hx-post=\"/signup/create\"><div class=\"form-group\"><label for=\"name\">First Name</label> <input type=\"text\" id=\"name\" name=\"name\" required></div><div class=\"form-group\"><label for=\"lastname\">Last Name</label> <input type=\"text\" id=\"lastname\" name=\"lastName\" required></div><div class=\"form-group\"><label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required></div><div class=\"form-group\"><label for=\"password\">Password</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn\">Sign Up</button><div><a href=\"/login\">Already have an account?</a>.<br></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		if hasMessage {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div>")
+			templ_7745c5c3_Err = Page(false).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(message)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/user/signup.templ`, Line: 36, Col: 16}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		} else if !hasMessage {
+			templ_7745c5c3_Err = Page(true).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</form></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Sign Up</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script><style>\r\n\t\t\t\t.signup {\r\n                    display: flex;\r\n                    flex-direction: column;\r\n                    align-items: center;\r\n                    justify-content: center;\r\n                    min-height: 100vh;\r\n                    padding: 20px;\r\n                }\r\n                form {\r\n                    background-color: #2A9D8F;\r\n                    padding: 20px;\r\n                    border-radius: 10px;\r\n                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\r\n                    width: 100%;\r\n                    max-width: 400px;\r\n                    box-sizing: border-box;\r\n                }\r\n                .form-group {\r\n                    margin-bottom: 15px;\r\n                }\r\n                .form-group label {\r\n                    display: block;\r\n                    margin-bottom: 5px;\r\n                    color: #CAD2C5; \r\n                    font-weight: bold;\r\n                }\r\n                .form-group input {\r\n                    width: 100%;\r\n                    padding: 10px;\r\n                    border: 1px solid #ccc;\r\n                    border-radius: 5px;\r\n                    font-size: 16px;\r\n                    box-sizing: border-box;\r\n                }\r\n                .btn {\r\n                    width: 100%;\r\n                    padding: 10px;\r\n                    background-color: #CAD2C5; \r\n                    border: none;\r\n                    border-radius: 5px;\r\n                    color: #2A9D8F; \r\n                    font-size: 18px;\r\n                    font-weight: bold;\r\n                    cursor: pointer;\r\n                }\r\n                .btn:hover {\r\n                    background-color: #FFF;\r\n                    color: #2A9D8F;\r\n                }\r\n                a {\r\n                    color: #E4C1B9;\r\n\t\t\t\t\tfont-size: 18px;\r\n\t\t\t\t\ttext-align: center;\r\n\t\t\t\t\t\r\n                }\r\n                a:hover {\r\n                    text-decoration: underline;\r\n                }\r\n\t\t\t\t.message {\r\n                    color: #E4C1B9; \r\n                    margin-top: 20px;\r\n                    font-weight: bold;\r\n                    min-height: 20px;\r\n                    text-align: center;\r\n                }\r\n                @media (max-width: 600px) {\r\n                    form {\r\n                        width: 90%;\r\n                    }\r\n                    .btn {\r\n                        font-size: 16px;\r\n                    }\r\n                }\r\n            </style></head><body><div class=\"signup\"><form hx-post=\"/signup/create\" hx-swap=\"outerHTML\" hx-target=\".signup\"><div class=\"form-group\"><label for=\"name\">First Name</label> <input type=\"text\" id=\"name\" name=\"name\" required></div><div class=\"form-group\"><label for=\"lastname\">Last Name</label> <input type=\"text\" id=\"lastname\" name=\"lastName\" required></div><div class=\"form-group\"><label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required></div><div class=\"form-group\"><label for=\"password\">Password</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn\">Sign Up</button><div><a href=\"/login\">Already have an account?</a><br></div><div class=\"message\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(message)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/user/signup.templ`, Line: 115, Col: 14}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></form></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
