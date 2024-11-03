@@ -25,7 +25,7 @@ func NewApiServer(addr string, db *sql.DB) *APIServer {
 func (s *APIServer) Run() error {
 
 	router := gin.Default()
-	// router.LoadHTMLGlob("./frontend/templates/*.html")
+	router.Static("/static", "frontend/static")
 
 	userStore := user.NewStore(s.db)
 	productStore := product.NewStore(s.db)
