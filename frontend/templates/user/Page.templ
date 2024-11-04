@@ -6,6 +6,7 @@ templ Page(nav bool) {
             <meta charset="UTF-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <title>Gear Up</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <script src="https://unpkg.com/htmx.org@1.9.2"></script>
             <style>
                 body {
@@ -31,7 +32,7 @@ templ Page(nav bool) {
                     width: 50%;
                     height: 50%;
                     object-fit: cover;
-                    filter: brightness(80%); 
+                    filter: brightness(80%);
                 }
                 .img1 {
                     top: 0;
@@ -54,14 +55,40 @@ templ Page(nav bool) {
                     padding: 15px;
                     display: flex;
                     justify-content: center;
+                    align-items: center;
                     flex-wrap: wrap;
                 }
-                nav a {
-                    color: #F2CD5D;
+                .nav-center {
+                    display: flex;
+                    justify-content: center;
+                    flex-grow: 1;
+                }
+                .nav-center a {
+                    color: #ffffff;
                     text-decoration: none;
                     margin: 10px 15px;
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                }
+                .nav-center a i {
+                    margin-right: 5px;
+                }
+                .nav-right {
+                    margin-left: auto;
+                }
+                .nav-right a {
+                    color: #ffffff;
+                    text-decoration: none;
+                    margin: 10px 15px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                }
+                .nav-right a i {
+                    margin-right: 5px;
                 }
                 nav a:hover {
                     color: #3A1772;
@@ -71,9 +98,9 @@ templ Page(nav bool) {
                         flex-direction: column;
                         align-items: center;
                     }
-                    nav a {
+                    .nav-center a, .nav-right a {
                         margin: 10px 0;
-                        font-size: 16px;
+                        font-size: 14px;
                         font-weight: bold;
                     }
                 }
@@ -81,19 +108,26 @@ templ Page(nav bool) {
         </head>
         <body>
             <div class="background-images">
-                <img src="/static/1.jpg" class="img1" alt="Background Image 1">
+                <img src="/static/3.jpg" class="img1" alt="Background Image 1">
                 <img src="/static/2.jpg" class="img2" alt="Background Image 2">
-                <img src="/static/3.jpg" class="img3" alt="Background Image 3">
+                <img src="/static/1.jpg" class="img3" alt="Background Image 3">
                 <img src="/static/4.jpg" class="img4" alt="Background Image 4">
             </div>
             if nav {
                 <nav>
-                    <a href="/products/accessories">Accessories</a>
-                    <a href="/products/bicycles">Bicycles</a>
-                    <a href="/orders">Your Orders</a>
-                    <a href="/overall">Overall about Bicycles</a>
-                    <a href="/tech-support">Tech-Support</a>
-                    <a href="/user">Account</a>
+                    <div class="nav-center">
+                        <a href="/products/accessories"><i class="fas fa-cogs"></i> Accessories</a>
+                        <a href="/products/bicycles"><i class="fas fa-bicycle"></i> Bicycles</a>
+                        <a href="/orders"><i class="fas fa-list"></i> My Orders</a>
+                        <a href="/cart"><i class="fas fa-shopping-cart"></i> My Cart</a>
+                        <a href="/overall"><i class="fas fa-info-circle"></i> Overall about Bicycles</a>
+                        <a href="/tech-support"><i class="fas fa-tools"></i> Tech-Support</a>
+                        <a href="/signup"><i class="fas fa-user-plus"></i> Signup</a>
+                        <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    </div>
+                    <div class="nav-right">
+                        <a href="/user"><i class="fas fa-user-circle"></i> Account</a>
+                    </div>
                 </nav>
             }
             {children...}
