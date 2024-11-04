@@ -1,22 +1,102 @@
 package templates
 templ Page(nav bool) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Shop</title>
-			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
-		</head>
-		<body>
-            if nav{
-                <nav >
-					<a href="/products">product</a>
-
-					<a href="/user" >account</a>
-				</nav>
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Gear Up</title>
+            <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+                    background: #fff;
+                }
+                .background-images {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    z-index: -1;
+                }
+                .background-images img {
+                    position: absolute;
+                    width: 50%;
+                    height: 50%;
+                    object-fit: cover;
+                    filter: brightness(80%); 
+                }
+                .img1 {
+                    top: 0;
+                    left: 0;
+                }
+                .img2 {
+                    top: 0;
+                    left: 50%;
+                }
+                .img3 {
+                    top: 50%;
+                    left: 0;
+                }
+                .img4 {
+                    top: 50%;
+                    left: 50%;
+                }
+                nav {
+                    background-color: #DEA54B;
+                    padding: 15px;
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+                nav a {
+                    color: #F2CD5D;
+                    text-decoration: none;
+                    margin: 10px 15px;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                nav a:hover {
+                    color: #3A1772;
+                }
+                @media (max-width: 600px) {
+                    nav {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    nav a {
+                        margin: 10px 0;
+                        font-size: 16px;
+                        font-weight: bold;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="background-images">
+                <img src="/static/1.jpg" class="img1" alt="Background Image 1">
+                <img src="/static/2.jpg" class="img2" alt="Background Image 2">
+                <img src="/static/3.jpg" class="img3" alt="Background Image 3">
+                <img src="/static/4.jpg" class="img4" alt="Background Image 4">
+            </div>
+            if nav {
+                <nav>
+                    <a href="/products/accessories">Accessories</a>
+                    <a href="/products/bicycles">Bicycles</a>
+                    <a href="/orders">Your Orders</a>
+                    <a href="/overall">Overall about Bicycles</a>
+                    <a href="/tech-support">Tech-Support</a>
+                    <a href="/user">Account</a>
+                </nav>
             }
-            {children... }
-		</body>
-	</html>
+            {children...}
+        </body>
+    </html>
 }

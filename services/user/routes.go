@@ -72,10 +72,10 @@ func (h *Handler) SignUp(c *gin.Context) {
 }
 
 func (h *Handler) LoadSignUpTemplate(c *gin.Context) {
-	templates.Signup(true, "").Render(c.Request.Context(), c.Writer)
+	templates.Signup(false, "").Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) LoadLogInTemplate(c *gin.Context) {
-	templates.Login(true, "").Render(c.Request.Context(), c.Writer)
+	templates.Login(false, "").Render(c.Request.Context(), c.Writer)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
@@ -112,7 +112,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 			templates.Login(true, err.Error()).Render(c.Request.Context(), c.Writer)
 			return
 		}
-		c.Writer.Header().Add("HX-Redirect", "/products")
+		c.Writer.Header().Add("HX-Redirect", "/products/accessories")
 		log.Println(secret)
 		c.SetSameSite(http.SameSiteLaxMode)
 		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)

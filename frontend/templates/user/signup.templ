@@ -1,43 +1,120 @@
 package templates
 
 templ Signup(hasMessage bool, message string) {
-	@Page(true)
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Sign Up</title>
-			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
-		</head>
-		<body>
-			<div class="signup">
-				<form hx-post="/signup/create">
-					<div class="form-group">
-						<label for="name">First Name</label>
-						<input type="text" id="name" name="name" required/>
-					</div>
-					<div class="form-group">
-						<label for="lastname">Last Name</label>
-						<input type="text" id="lastname" name="lastName" required/>
-					</div>
-					<div class="form-group">
-						<label for="email">Email</label>
-						<input type="email" id="email" name="email" required/>
-					</div>
-					<div class="form-group">
-						<label for="password">Password</label>
-						<input type="password" id="password" name="password" required/>
-					</div>
-					<button type="submit" class="btn">Sign Up</button>
-					<div><a href="/login">Already have an account?</a>.<br></div>
-					if hasMessage {
-						<div>
-							{ message }
-						</div>
-					}
-				</form>
-			</div>
-		</body>
-	</html>
+    if hasMessage {
+        @Page(false)
+    } else if !hasMessage {
+        @Page(true)
+    }
+
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Sign Up</title>
+            <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+            <style>
+                .signup {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                form {
+                    background-color: #DEA54B;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    width: 100%;
+                    max-width: 400px;
+                    box-sizing: border-box;
+                }
+                .form-group {
+                    margin-bottom: 15px;
+                }
+                .form-group label {
+                    display: block;
+                    margin-bottom: 5px;
+                    color: #F2CD5D;
+                    font-weight: bold;
+                }
+                .form-group input {
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    box-sizing: border-box;
+                }
+                .btn {
+                    width: 100%;
+                    padding: 10px;
+                    background-color: #F2CD5D;
+                    border: none;
+                    border-radius: 5px;
+                    color: #3A1772;
+                    font-size: 18px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+                .btn:hover {
+                    background-color: #FFF;
+                    color: #3A1772;
+                }
+                a {
+                    color: #3A1772;
+                    font-size: 18px;
+                    text-align: center;
+                }
+                a:hover {
+                    text-decoration: underline;
+                }
+                .message {
+                    color: #3A1772;
+                    margin-top: 20px;
+                    font-weight: bold;
+                    min-height: 20px;
+                    text-align: center;
+                }
+                @media (max-width: 600px) {
+                    form {
+                        width: 90%;
+                    }
+                    .btn {
+                        font-size: 16px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="signup">
+                <form hx-post="/signup/create" hx-swap="outerHTML" hx-target=".signup">
+                    <div class="form-group">
+                        <label for="name">First Name</label>
+                        <input type="text" id="name" name="name" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" name="lastName" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required/>
+                    </div>
+                    <button type="submit" class="btn">Sign Up</button>
+                    <div><a href="/login">Already have an account?</a><br></div>
+                    <div class="message">
+                        {message}
+                    </div>
+                </form>
+            </div>
+        </body>
+    </html>
 }
