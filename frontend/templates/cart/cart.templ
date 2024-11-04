@@ -1,0 +1,28 @@
+package templates
+
+import "github.com/Megidy/e-commerce/types"
+
+
+import templates "github.com/Megidy/e-commerce/frontend/templates/user"
+
+templ LoadCart(bicycles []types.Bicycle,accessories []types.Accessory) {
+	@templates.Page(true)
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Cart</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+            for _,bicycle:=range bicycles{
+                @BicycleTile(&bicycle)
+            }
+            for _,accessory:=range accessories{
+                @AccessoryTile(&accessory)
+            }
+            
+		</body>
+	</html>
+}
