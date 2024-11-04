@@ -3,6 +3,7 @@ package product
 import (
 	"database/sql"
 	"log"
+	"strings"
 
 	"github.com/Megidy/e-commerce/types"
 )
@@ -92,4 +93,46 @@ func (s *Store) GetAccessoryById(id string) (types.Accessory, error) {
 		}
 	}
 	return a, nil
+}
+
+func (s *Store) GetAllProducts(carts []types.Cart) ([]types.Accessory, []types.Bicycle, error) {
+	var accessories []types.Accessory
+	var bicycle []types.Bicycle
+	log.Println("carts : ", carts)
+	for _, cart := range carts {
+		log.Println("entered loop")
+		var b types.Bicycle
+		if strings.HasPrefix(cart.Product_id, "b") {
+			log.Println("entered b")
+			rows, err := s.db.Query("select * from bicycles where id = ?", cart.Product_id)
+			if err != nil {
+				return nil, nil, err
+			}
+			log.Println("queried")
+			for rows.Next() {
+				err := rows.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+				if err != nil {
+					return nil, nil, err
+				}
+				log.Println("scanned")
+				bicycle = append(bicycle, b)
+			}
+		} else {
+			var a types.Accessory
+			rows, err := s.db.Query("select * from accessories where id = ?", cart.Product_id)
+			if err != nil {
+				return nil, nil, err
+			}
+			for rows.Next() {
+				err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Image)
+				if err != nil {
+					return nil, nil, err
+				}
+				accessories = append(accessories, a)
+			}
+		}
+
+	}
+
+	return accessories, bicycle, nil
 }
