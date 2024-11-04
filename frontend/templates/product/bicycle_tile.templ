@@ -9,7 +9,7 @@ templ BicycleTile(bicycle *types.Bicycle) {
 	<li
 		id={ fmt.Sprintf("bicycle-%s", bicycle.Id) }
 	>
-		<a href={ templ.URL(fmt.Sprintf("/products/accessories/%s", bicycle.Id)) }>
+		<a href={ templ.URL(fmt.Sprintf("/products/bicycle/%s", bicycle.Id)) }>
 			<span>
 				<img
 					src={ bicycle.Image }
