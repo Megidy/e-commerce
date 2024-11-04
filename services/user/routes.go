@@ -92,18 +92,18 @@ func (h *Handler) LogIn(c *gin.Context) {
 		return
 	}
 	if !ok {
-		templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
+		templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 		return
 	} else if ok {
 		user, err := h.userStore.GetUserByEmail(logInPayload.Email)
 		if err != nil {
-			templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
+			templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
 		ok := auth.ComparePassword(user.Password, logInPayload.Password)
 		if !ok {
-			templates.Login(true, "Invalid data").Render(c.Request.Context(), c.Writer)
+			templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 			return
 		}
 		config := config.InitConfig()
