@@ -1,30 +1,65 @@
 package templates
 
 import (
-	"fmt"
-	templates "github.com/Megidy/e-commerce/frontend/templates/user"
-	"github.com/Megidy/e-commerce/types"
+    "fmt"
+    templates "github.com/Megidy/e-commerce/frontend/templates/user"
+    "github.com/Megidy/e-commerce/types"
 )
 
-templ LoadSingleAccessory(accessory types.Accessory) {
-	@templates.Page(true)
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Accessory</title>
-			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
-		</head>
-		<body>
-			<div>
-				<img src={ accessory.Image }/>
-				<p>Name : { accessory.Name }</p>
-				<p>Description : { accessory.Description }</p>
-				<p>Quantity : { fmt.Sprintf("%d",accessory.Quantity) }</p>
-				<p>Price : { fmt.Sprintf("%f",accessory.Price) }</p>
-			</div>
-		</body>
-	</html>
+templ LoadSingleAccessory(accessory types.Accessory, isAddingToCart bool,message string) {
+	<div class="page">
+	
+    @templates.Page(true)
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Accessory</title>
+            <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+        </head>
+        <body>
+            <div>
+                <img src={ accessory.Image } alt="Accessory Image"/>
+                <p>Name: { accessory.Name }</p>
+                <p>Description: { accessory.Description }</p>
+                <p>Quantity: { fmt.Sprintf("%d", accessory.Quantity) }</p>
+                <p>Price: { fmt.Sprintf("%.2f", accessory.Price) }</p>
+                if isAddingToCart {
+                    <form 
+                        hx-post={fmt.Sprintf("/products/addtocart/%s", accessory.Id)}
+                        hx-swap="outerHTML"
+                        hx-target=".page"    
+                    >
+                        <label>Quantity</label>
+                        <input
+                            type="text"
+                            name="quantity"
+                            required
+                        />
+                        <button type="submit">
+                            Add 
+                        </button>
+                        <button 
+                            type="button"
+                            hx-get={fmt.Sprintf("/products/accessory/%s?isAddingCar=false", accessory.Id)}
+                            hx-swap="outerHTML"
+                            hx-target=".page"
+                        >
+                            Cancel
+                        </button>
+                    </form>
+                } else {
+                    <button
+                        hx-get={fmt.Sprintf("/products/accessory/%s?isAddingCar=true", accessory.Id)}
+                        hx-swap="outerHTML"
+                        hx-target=".page"
+                    >
+                        Add to cart
+                    </button>
+                }
+            </div>
+        </body>
+    </html>
+	</div>
 }
-    
