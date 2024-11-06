@@ -32,3 +32,11 @@ func (s *Store) GetCart(userID string) ([]types.Cart, error) {
 	return cart, nil
 
 }
+
+func (s *Store) AddToCart(cart types.Cart) error {
+	_, err := s.db.Exec("insert into cart(user_id,product_id,quantity) values (?,?,?)", cart.UserId, cart.Product_id, cart.Quantity)
+	if err != nil {
+		return err
+	}
+	return nil
+}
