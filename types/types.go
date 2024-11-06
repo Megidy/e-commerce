@@ -47,6 +47,7 @@ type ProductStore interface {
 
 type CartStore interface {
 	GetCart(userID string) ([]Cart, error)
+	AddToCart(cart Cart) error
 }
 type Accessory struct {
 	Id          string
