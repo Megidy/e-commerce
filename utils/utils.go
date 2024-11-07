@@ -2,6 +2,7 @@ package utils
 
 import (
 	"log"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,4 +25,8 @@ func SendResponse(c *gin.Context, message string, statusCode int) {
 	c.JSON(statusCode, gin.H{
 		"message": message,
 	})
+}
+
+func IsAccessory(id string) bool {
+	return strings.HasPrefix(id, "a")
 }
