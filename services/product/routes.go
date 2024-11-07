@@ -46,13 +46,14 @@ func (h *Handler) GetAllBicycles(c *gin.Context) {
 }
 
 func (h *Handler) GetBicycleById(c *gin.Context) {
+	isAddingToCart := c.Request.URL.Query().Get("isAddingCar") == "true"
 	id := c.Param("bicycleID")
 	bicycle, err := h.productStore.GetBicycleById(id)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	templates.LoadSingleBicycle(bicycle).Render(c.Request.Context(), c.Writer)
+	templates.LoadSingleBicycle(bicycle, isAddingToCart, "").Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) GetAccessoryById(c *gin.Context) {
 	isAddingToCar := c.Request.URL.Query().Get("isAddingCar") == "true"
@@ -62,5 +63,5 @@ func (h *Handler) GetAccessoryById(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	templates.LoadSingleAccessory(accessory, isAddingToCar).Render(c.Request.Context(), c.Writer)
+	templates.LoadSingleAccessory(accessory, isAddingToCar, "").Render(c.Request.Context(), c.Writer)
 }
