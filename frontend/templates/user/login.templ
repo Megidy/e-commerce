@@ -2,11 +2,7 @@ package templates
 
 templ Login(hasMessage bool, message string) {
     <div class="overall">
-    if hasMessage{
-        @Page(false)
-    } else if !hasMessage{
          @Page(true)
-    }
     
 	<!DOCTYPE html>
 	<html lang="en">
