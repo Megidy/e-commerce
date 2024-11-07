@@ -50,14 +50,23 @@ func (h *Handler) GetCart(c *gin.Context) {
 
 }
 func (h *Handler) AddToCart(c *gin.Context) {
+
+	//setting up url query
 	isAddingToCart := c.Request.URL.Query().Get("isAddingCar") == "true"
 	var quantityOfproduct int
+	//getting params
 	productID := c.Param("productID")
 	var cart types.Cart
+
+	//getting user for cart
 	u, _ := c.Get("user")
 	user := u.(types.User)
+	//converting to int
+	//if payload is incorrect than ->bad request
 	str := h.templates.GetDataFromForm(c, "quantity")
 	quantity, err := strconv.Atoi(str)
+
+	//checking if payload is correct for both
 	if err != nil {
 		if utils.IsAccessory(productID) {
 			acc, err := h.productStore.GetAccessoryById(productID)
@@ -76,14 +85,12 @@ func (h *Handler) AddToCart(c *gin.Context) {
 				return
 			}
 			product.LoadSingleBicycle(bic, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
-			log.Println(err)
 			return
 		}
 
 	}
 
-	//check if quantity of product > quantity of order
-
+	//getting product from db for both
 	if utils.IsAccessory(productID) {
 		acc, err := h.productStore.GetAccessoryById(productID)
 		if err != nil {
@@ -93,13 +100,16 @@ func (h *Handler) AddToCart(c *gin.Context) {
 		quantityOfproduct = acc.Quantity
 
 	} else {
-		bic, err := h.productStore.GetAccessoryById(productID)
+		bic, err := h.productStore.GetBicycleById(productID)
+		log.Println("bicycle: ", bic)
 		if err != nil {
 			log.Println(err)
 			return
 		}
 		quantityOfproduct = bic.Quantity
 	}
+
+	//checking if quantity of product > quantity of order for both
 	if quantity > quantityOfproduct {
 		if utils.IsAccessory(productID) {
 			acc, err := h.productStore.GetAccessoryById(productID)
@@ -122,6 +132,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 		}
 
 	}
+
 	cart.Quantity = quantity
 	cart.UserId = user.ID
 	cart.Product_id = productID
