@@ -120,7 +120,11 @@ func (h *Handler) LogIn(c *gin.Context) {
 	}
 }
 func (h *Handler) UserAccount(c *gin.Context) {
-	u, _ := c.Get("user")
+	u, ok := c.Get("user")
+	if !ok {
+		log.Println("user not found")
+		return
+	}
 	user := u.(types.User)
 	log.Println(user)
 	templates.UserAccount(user).Render(c.Request.Context(), c.Writer)
