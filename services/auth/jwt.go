@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -25,21 +26,27 @@ func (h *Handler) WithJWT(c *gin.Context) {
 
 	tokenString, err := c.Cookie("Authorization")
 	if err != nil {
-		AccesDenied(c)
+		log.Println(1)
+		RedirectToLogin(c)
+		return
 	}
 	token, err := ValidateJWT(tokenString)
 	if err != nil {
-		AccesDenied(c)
+		log.Println(2)
+		RedirectToLogin(c)
+		return
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			log.Println(3)
+			RedirectToLogin(c)
+			return
 		}
 		id := claims["userID"].(string)
 		user, err := h.UserStore.GetUserById(id)
 		if err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
-
+			return
 		}
 		c.Set("user", user)
 		c.Next()
@@ -49,7 +56,7 @@ func (h *Handler) WithJWT(c *gin.Context) {
 func ValidateJWT(tokenString string) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf(" Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		config := config.InitConfig()
 		return []byte(config.Secret), nil
@@ -57,7 +64,6 @@ func ValidateJWT(tokenString string) (*jwt.Token, error) {
 }
 
 func CreateJWT(secret []byte, userId string) (string, error) {
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": userId,
 		"exp":    time.Now().Add(time.Second * 60 * 24 * 30).Unix(),
@@ -69,6 +75,12 @@ func CreateJWT(secret []byte, userId string) (string, error) {
 	return tokenString, nil
 }
 
-func AccesDenied(c *gin.Context) {
-	c.AbortWithStatus(http.StatusUnauthorized)
+func RedirectToLogin(c *gin.Context) {
+	if c.Request.Method == http.MethodPost {
+		c.Writer.Header().Add("HX-Redirect", "/login")
+	} else {
+		c.Redirect(http.StatusFound, "/login")
+		c.Abort()
+	}
+
 }
