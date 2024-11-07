@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
-	templates "github.com/Megidy/e-commerce/frontend/templates/cart"
+	carts "github.com/Megidy/e-commerce/frontend/templates/cart"
+	"github.com/Megidy/e-commerce/utils"
+
+	product "github.com/Megidy/e-commerce/frontend/templates/product"
 	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/types"
 	"github.com/gin-gonic/gin"
@@ -43,31 +45,99 @@ func (h *Handler) GetCart(c *gin.Context) {
 		log.Println(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	templates.LoadCart(bicycles, accessories).Render(c.Request.Context(), c.Writer)
+
+	carts.LoadCart(bicycles, accessories).Render(c.Request.Context(), c.Writer)
 
 }
 func (h *Handler) AddToCart(c *gin.Context) {
+	isAddingToCart := c.Request.URL.Query().Get("isAddingCar") == "true"
+	var quantityOfproduct int
+	productID := c.Param("productID")
+	var cart types.Cart
 	u, _ := c.Get("user")
 	user := u.(types.User)
-	log.Println("user: ", user)
-	var cart types.Cart
-	quantity, err := strconv.Atoi(h.templates.GetDataFromForm(c, "quantity"))
+	str := h.templates.GetDataFromForm(c, "quantity")
+	quantity, err := strconv.Atoi(str)
+	if err != nil {
+		if utils.IsAccessory(productID) {
+			acc, err := h.productStore.GetAccessoryById(productID)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			product.LoadSingleAccessory(acc, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			log.Println(err)
+			return
+		} else {
+			bic, err := h.productStore.GetBicycleById(productID)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			product.LoadSingleBicycle(bic, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			log.Println(err)
+			return
+		}
+
+	}
+
+	//check if quantity of product > quantity of order
+
+	if utils.IsAccessory(productID) {
+		acc, err := h.productStore.GetAccessoryById(productID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		quantityOfproduct = acc.Quantity
+
+	} else {
+		bic, err := h.productStore.GetAccessoryById(productID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		quantityOfproduct = bic.Quantity
+	}
+	if quantity > quantityOfproduct {
+		if utils.IsAccessory(productID) {
+			acc, err := h.productStore.GetAccessoryById(productID)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			log.Println("quantity of order is bigger than quantity of product")
+			product.LoadSingleAccessory(acc, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			return
+		} else {
+			bic, err := h.productStore.GetBicycleById(productID)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			log.Println("quantity of order is bigger than quantity of product")
+			product.LoadSingleBicycle(bic, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			return
+		}
+
+	}
+	cart.Quantity = quantity
+	cart.UserId = user.ID
+	cart.Product_id = productID
+
+	err = h.cartStore.AddToCart(cart)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	id := c.Param("productID")
-	log.Println("quantity", quantity)
-	log.Println("id :", id)
-	cart.Quantity = quantity
-	cart.UserId = user.ID
-	cart.Product_id = id
-	h.cartStore.AddToCart(cart)
-	if strings.HasPrefix(id, "a") {
-		str := fmt.Sprintf("/products/accessory/%s", id)
+	if utils.IsAccessory(productID) {
+		str := fmt.Sprintf("/products/accessory/%s", productID)
 		c.Writer.Header().Add("HX-Redirect", str)
 	} else {
-		str := fmt.Sprintf("/products/bicycle/%s", id)
+		str := fmt.Sprintf("/products/bicycle/%s", productID)
 		c.Writer.Header().Add("HX-Redirect", str)
+
 	}
+
 }
