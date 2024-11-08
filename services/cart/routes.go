@@ -29,6 +29,7 @@ func NewHandler(userStore types.UserStore, cartStore types.CartStore, productSto
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.GET("/cart", auth.NewHandler(h.userStore).WithJWT, h.GetCart)
 	router.POST("/products/addtocart/:productID", auth.NewHandler(h.userStore).WithJWT, h.AddToCart)
+	router.DELETE("/cart/deletefromcart/:productID", auth.NewHandler(h.userStore).WithJWT, h.DeleteFromCart)
 }
 
 func (h *Handler) GetCart(c *gin.Context) {
@@ -110,7 +111,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	}
 
 	//checking if quantity of product > quantity of order for both
-	if quantity > quantityOfproduct {
+	if quantity >= quantityOfproduct {
 		if utils.IsAccessory(productID) {
 			acc, err := h.productStore.GetAccessoryById(productID)
 			if err != nil {
@@ -139,7 +140,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 
 	err = h.cartStore.AddToCart(cart)
 	if err != nil {
-		log.Println(err)
+		product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 	if utils.IsAccessory(productID) {
@@ -150,5 +151,21 @@ func (h *Handler) AddToCart(c *gin.Context) {
 		c.Writer.Header().Add("HX-Redirect", str)
 
 	}
+
+}
+func (h *Handler) DeleteFromCart(c *gin.Context) {
+	u, ok := c.Get("user")
+	if !ok {
+		log.Println("user not found")
+		return
+	}
+	user := u.(types.User)
+	productID := c.Param("productID")
+	err := h.cartStore.DeleteFromCart(user.ID, productID)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println("deleted from cart accessory: ", productID)
 
 }
