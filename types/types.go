@@ -43,11 +43,13 @@ type ProductStore interface {
 	GetBicycleById(id string) (Bicycle, error)
 	GetAccessoryById(id string) (Accessory, error)
 	GetAllProducts(carts []Cart) ([]Accessory, []Bicycle, error)
+	ChangeProductsQuantity(productID, action string, amount int) error
 }
 
 type CartStore interface {
 	GetCart(userID string) ([]Cart, error)
 	AddToCart(cart Cart) error
+	DeleteFromCart(userID, productID string) error
 }
 type Accessory struct {
 	Id          string
@@ -55,6 +57,7 @@ type Accessory struct {
 	Description string
 	Quantity    int
 	Price       float32
+	Category    string
 	Image       string
 }
 
