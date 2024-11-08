@@ -19,7 +19,7 @@ templ BicycleTile(bicycle *types.Bicycle) {
 				Price : { fmt.Sprintf("%f",bicycle.Price) }
 			</span>
 		</a>
-		<button>
+		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",bicycle.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#bicycle-%s",bicycle.Id)}>
 			delete from cart
 		</button>
 	</li>
@@ -39,7 +39,7 @@ templ AccessoryTile(accessory *types.Accessory) {
 				Price : { fmt.Sprintf("%f",accessory.Price) }
 			</span>
 		</a>
-		<button>
+		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",accessory.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#accessory-%s",accessory.Id)}>
 			delete from cart
 		</button>
 	</li>
