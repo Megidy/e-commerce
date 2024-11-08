@@ -40,3 +40,11 @@ func (s *Store) AddToCart(cart types.Cart) error {
 	}
 	return nil
 }
+
+func (s *Store) DeleteFromCart(userID, productID string) error {
+	_, err := s.db.Exec("delete from cart where user_id=? and product_id=?", userID, productID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
