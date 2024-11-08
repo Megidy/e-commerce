@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Megidy/e-commerce/types"
+	"github.com/Megidy/e-commerce/utils"
 )
 
 type Store struct {
@@ -25,7 +26,7 @@ func (s *Store) GetAllAccessories() ([]types.Accessory, error) {
 	}
 	for rows.Next() {
 		var a types.Accessory
-		err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Image)
+		err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Category, &a.Image)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				return nil, nil
@@ -86,7 +87,7 @@ func (s *Store) GetAccessoryById(id string) (types.Accessory, error) {
 	}
 	for row.Next() {
 
-		err := row.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Image)
+		err := row.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Category, &a.Image)
 		if err != nil {
 			return types.Accessory{}, err
 
@@ -124,7 +125,7 @@ func (s *Store) GetAllProducts(carts []types.Cart) ([]types.Accessory, []types.B
 				return nil, nil, err
 			}
 			for rows.Next() {
-				err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Image)
+				err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Category, &a.Image)
 				if err != nil {
 					return nil, nil, err
 				}
@@ -135,4 +136,33 @@ func (s *Store) GetAllProducts(carts []types.Cart) ([]types.Accessory, []types.B
 	}
 
 	return accessories, bicycle, nil
+}
+func (s *Store) ChangeProductsQuantity(productID, action string, amount int) error {
+	if action == "inc" {
+		if utils.IsAccessory(productID) {
+			_, err := s.db.Exec("update accessories set quantity = quantity+? where id =?", amount, productID)
+			if err != nil {
+				return err
+			}
+		} else {
+			_, err := s.db.Exec("update bicycles set quantity = quantity+? where id =?", amount, productID)
+			if err != nil {
+				return err
+			}
+		}
+
+	} else {
+		if utils.IsAccessory(productID) {
+			_, err := s.db.Exec("update accessories set quantity = quantity-? where id =?", amount, productID)
+			if err != nil {
+				return err
+			}
+		} else {
+			_, err := s.db.Exec("update bicycles set quantity = quantity-? where id =?", amount, productID)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
