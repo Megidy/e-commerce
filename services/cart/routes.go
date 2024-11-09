@@ -40,10 +40,28 @@ func (h *Handler) GetCart(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	accessories, bicycles, totalPrice, err := h.productStore.GetAllProducts(cart)
+	accessories, bicycles, totalPrice, err := h.productStore.GetAllProductsForCart(cart)
 	if err != nil {
 		log.Println(err)
 		return
+	}
+	for _, accessory := range accessories {
+		if accessory.Quantity > accessory.Accessory.Quantity {
+			amount := accessory.Quantity - accessory.Accessory.Quantity
+			err = h.cartStore.ChangeCartsProductQuantity(user.ID, accessory.Accessory.Id, "dec", amount)
+			if err != nil {
+				return
+			}
+		}
+	}
+	for _, bicycle := range bicycles {
+		if bicycle.Quantity > bicycle.Bicycle.Quantity {
+			amount := bicycle.Quantity - bicycle.Bicycle.Quantity
+			err = h.cartStore.ChangeCartsProductQuantity(user.ID, bicycle.Bicycle.Id, "dec", amount)
+			if err != nil {
+				return
+			}
+		}
 	}
 
 	carts.LoadCart(accessories, bicycles, totalPrice).Render(c.Request.Context(), c.Writer)
@@ -136,14 +154,14 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	cart.Quantity = quantity
 	cart.UserId = user.ID
 	cart.Product_id = productID
-	ok, err := h.cartStore.CheckIfProductInCart(user.ID, productID)
+	ok, err := h.cartStore.ProductInCart(user.ID, productID)
 
 	if err != nil {
 		product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 	if ok {
-		err = h.cartStore.ChangeProductsQuantity(cart.UserId, productID, quantity)
+		err = h.cartStore.ChangeCartsProductQuantity(cart.UserId, productID, "inc", quantity)
 		if err != nil {
 			product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
 			return
