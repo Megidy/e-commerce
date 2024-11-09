@@ -72,9 +72,9 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	//setting up url query
 	isAddingToCart := c.Request.URL.Query().Get("isAddingCar") == "true"
 	var quantityOfproduct int
+	var cart types.Cart
 	//getting params
 	productID := c.Param("productID")
-	var cart types.Cart
 
 	//getting user for cart
 	u, _ := c.Get("user")
@@ -82,6 +82,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	//converting to int
 	//if payload is incorrect than ->bad request
 	str := h.templates.GetDataFromForm(c, "quantity")
+
 	quantity, err := strconv.Atoi(str)
 
 	//checking if payload is correct for both
@@ -102,10 +103,46 @@ func (h *Handler) AddToCart(c *gin.Context) {
 				log.Println(err)
 				return
 			}
+
 			product.LoadSingleBicycle(bic, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
+	}
+
+	//Checking if quantity of payload  < quantity in cart
+	ca, err := h.cartStore.GetCart(user.ID)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, car := range ca {
+		if car.Product_id == productID {
+			if utils.IsAccessory(productID) {
+				acc, err := h.productStore.GetAccessoryById(productID)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				if quantity+car.Quantity > acc.Quantity {
+					product.LoadSingleAccessory(acc, isAddingToCart, "cart is overload for this product").Render(c.Request.Context(), c.Writer)
+					log.Println(err)
+					return
+				}
+
+			} else {
+				bic, err := h.productStore.GetBicycleById(productID)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				if quantity+car.Quantity > bic.Quantity {
+					product.LoadSingleBicycle(bic, isAddingToCart, "cart is overload for this product").Render(c.Request.Context(), c.Writer)
+					log.Println(err)
+					return
+				}
+			}
+		}
 	}
 
 	//getting product from db for both
@@ -128,7 +165,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	}
 
 	//checking if quantity of product > quantity of order for both
-	if quantity >= quantityOfproduct {
+	if quantity > quantityOfproduct {
 		if utils.IsAccessory(productID) {
 			acc, err := h.productStore.GetAccessoryById(productID)
 			if err != nil {
@@ -136,7 +173,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 				return
 			}
 			log.Println("quantity of order is bigger than quantity of product")
-			product.LoadSingleAccessory(acc, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			product.LoadSingleAccessory(acc, isAddingToCart, "Big Order").Render(c.Request.Context(), c.Writer)
 			return
 		} else {
 			bic, err := h.productStore.GetBicycleById(productID)
@@ -145,7 +182,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 				return
 			}
 			log.Println("quantity of order is bigger than quantity of product")
-			product.LoadSingleBicycle(bic, isAddingToCart, "Bad Request").Render(c.Request.Context(), c.Writer)
+			product.LoadSingleBicycle(bic, isAddingToCart, "Big Order").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
