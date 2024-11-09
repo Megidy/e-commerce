@@ -24,6 +24,7 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 	}
 }
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
+	router.GET("/", h.LoadSignUpTemplate)
 	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
