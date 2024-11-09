@@ -49,7 +49,7 @@ func (s *Store) DeleteFromCart(userID, productID string) error {
 	return nil
 }
 
-func (s *Store) CheckIfProductInCart(userID, productID string) (bool, error) {
+func (s *Store) ProductInCart(userID, productID string) (bool, error) {
 	row, err := s.db.Query("select * from cart where user_id=? and product_id=?", userID, productID)
 	if err != nil {
 		return false, err
@@ -70,10 +70,18 @@ func (s *Store) CheckIfProductInCart(userID, productID string) (bool, error) {
 	}
 	return false, nil
 }
-func (s *Store) ChangeProductsQuantity(userID, ProductID string, amount int) error {
-	_, err := s.db.Exec("update cart set quantity = quantity+? where user_id=? and product_id =?", amount, userID, ProductID)
-	if err != nil {
-		return err
+func (s *Store) ChangeCartsProductQuantity(userID, ProductID, action string, amount int) error {
+	if action == "inc" {
+		_, err := s.db.Exec("update cart set quantity = quantity+? where user_id=? and product_id =?", amount, userID, ProductID)
+		if err != nil {
+			return err
+		}
+	} else {
+		_, err := s.db.Exec("update cart set quantity = quantity-? where user_id=? and product_id =?", amount, userID, ProductID)
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }

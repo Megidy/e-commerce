@@ -95,7 +95,7 @@ func (s *Store) GetAccessoryById(id string) (types.Accessory, error) {
 	return a, nil
 }
 
-func (s *Store) GetAllProducts(carts []types.Cart) ([]types.CartAccessoryResponse, []types.CartBicycleResponse, float32, error) {
+func (s *Store) GetAllProductsForCart(carts []types.Cart) ([]types.CartAccessoryResponse, []types.CartBicycleResponse, float32, error) {
 	var accessories []types.CartAccessoryResponse
 	var bicycles []types.CartBicycleResponse
 	var totalPrice float32
