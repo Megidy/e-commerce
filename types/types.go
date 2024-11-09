@@ -50,6 +50,8 @@ type CartStore interface {
 	GetCart(userID string) ([]Cart, error)
 	AddToCart(cart Cart) error
 	DeleteFromCart(userID, productID string) error
+	CheckIfProductInCart(userID, productID string) (bool, error)
+	ChangeProductsQuantity(userID, ProductID string, amount int) error
 }
 type Accessory struct {
 	Id          string
