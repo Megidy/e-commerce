@@ -42,7 +42,7 @@ type ProductStore interface {
 	GetAllBicycles() ([]Bicycle, error)
 	GetBicycleById(id string) (Bicycle, error)
 	GetAccessoryById(id string) (Accessory, error)
-	GetAllProducts(carts []Cart) ([]Accessory, []Bicycle, error)
+	GetAllProducts(carts []Cart) ([]CartAccessoryResponse, []CartBicycleResponse, error)
 	ChangeProductsQuantity(productID, action string, amount int) error
 }
 
@@ -79,4 +79,16 @@ type Cart struct {
 	Product_id string
 	Quantity   int
 	Created    string
+}
+
+type CartBicycleResponse struct {
+	Bicycle        *Bicycle
+	Quantity       int
+	PriceOfBicycle float32
+}
+
+type CartAccessoryResponse struct {
+	Accessory        *Accessory
+	Quantity         int
+	PriceOfAccessory float32
 }
