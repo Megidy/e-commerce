@@ -136,12 +136,26 @@ func (h *Handler) AddToCart(c *gin.Context) {
 	cart.Quantity = quantity
 	cart.UserId = user.ID
 	cart.Product_id = productID
+	ok, err := h.cartStore.CheckIfProductInCart(user.ID, productID)
 
-	err = h.cartStore.AddToCart(cart)
 	if err != nil {
 		product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
+	if ok {
+		err = h.cartStore.ChangeProductsQuantity(cart.UserId, productID, quantity)
+		if err != nil {
+			product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
+			return
+		}
+	} else {
+		err = h.cartStore.AddToCart(cart)
+		if err != nil {
+			product.LoadSingleBicycle(types.Bicycle{}, isAddingToCart, err.Error()).Render(c.Request.Context(), c.Writer)
+			return
+		}
+	}
+
 	if utils.IsAccessory(productID) {
 		str := fmt.Sprintf("/products/accessory/%s", productID)
 		c.Writer.Header().Add("HX-Redirect", str)
