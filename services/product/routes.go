@@ -23,7 +23,6 @@ func NewHandler(userStore types.UserStore, productStore types.ProductStore) *Han
 func (h *Handler) RegisterRoutes(router gin.IRouter) {
 	router.GET("/products/accessories", h.GetAllAccessories)
 	router.GET("/products/bicycles/", h.GetAllBicycles)
-	router.GET("/products/accessories/:accessoryID", h.GetAccessoryById)
 	router.GET("/products/bicycle/:bicycleID", h.GetBicycleById)
 	router.GET("/products/accessory/:accessoryID", h.GetAccessoryById)
 }
