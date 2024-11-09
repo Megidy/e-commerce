@@ -42,7 +42,7 @@ type ProductStore interface {
 	GetAllBicycles() ([]Bicycle, error)
 	GetBicycleById(id string) (Bicycle, error)
 	GetAccessoryById(id string) (Accessory, error)
-	GetAllProducts(carts []Cart) ([]CartAccessoryResponse, []CartBicycleResponse, error)
+	GetAllProducts(carts []Cart) ([]CartAccessoryResponse, []CartBicycleResponse, float32, error)
 	ChangeProductsQuantity(productID, action string, amount int) error
 }
 
