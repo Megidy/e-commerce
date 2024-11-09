@@ -3,7 +3,6 @@ package product
 import (
 	"database/sql"
 	"log"
-	"strings"
 
 	"github.com/Megidy/e-commerce/types"
 	"github.com/Megidy/e-commerce/utils"
@@ -96,46 +95,60 @@ func (s *Store) GetAccessoryById(id string) (types.Accessory, error) {
 	return a, nil
 }
 
-func (s *Store) GetAllProducts(carts []types.Cart) ([]types.Accessory, []types.Bicycle, error) {
-	var accessories []types.Accessory
-	var bicycle []types.Bicycle
+func (s *Store) GetAllProducts(carts []types.Cart) ([]types.CartAccessoryResponse, []types.CartBicycleResponse, float32, error) {
+	var accessories []types.CartAccessoryResponse
+	var bicycles []types.CartBicycleResponse
+	var totalPrice float32
 	log.Println("carts : ", carts)
 	for _, cart := range carts {
 		log.Println("entered loop")
-		var b types.Bicycle
-		if strings.HasPrefix(cart.Product_id, "b") {
-			log.Println("entered b")
-			rows, err := s.db.Query("select * from bicycles where id = ?", cart.Product_id)
+		if utils.IsAccessory(cart.Product_id) {
+			var accessory types.CartAccessoryResponse
+
+			var PriceOfAllAccessories float32
+			row, err := s.db.Query("select * from accessories where id=?", cart.Product_id)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, 0, err
 			}
-			log.Println("queried")
-			for rows.Next() {
-				err := rows.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+			for row.Next() {
+				var a types.Accessory
+				err := row.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Category, &a.Image)
 				if err != nil {
-					return nil, nil, err
+					return nil, nil, 0, err
 				}
-				log.Println("scanned")
-				bicycle = append(bicycle, b)
+				PriceOfAllAccessories = a.Price * float32(cart.Quantity)
+				totalPrice = totalPrice + PriceOfAllAccessories
+				accessory.Accessory = &a
+				accessory.Quantity = cart.Quantity
+				accessory.PriceOfAccessory = PriceOfAllAccessories
+				accessories = append(accessories, accessory)
 			}
+			log.Println("accessories : ", accessories, ". Accessories PriceOfAccessory : ", accessory.PriceOfAccessory)
 		} else {
-			var a types.Accessory
-			rows, err := s.db.Query("select * from accessories where id = ?", cart.Product_id)
+			var bicycle types.CartBicycleResponse
+			var PriceOfAllBicycles float32
+			row, err := s.db.Query("select * from bicycles where id =? ", cart.Product_id)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, 0, err
 			}
-			for rows.Next() {
-				err := rows.Scan(&a.Id, &a.Name, &a.Description, &a.Quantity, &a.Price, &a.Category, &a.Image)
+			for row.Next() {
+				var b types.Bicycle
+				err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
 				if err != nil {
-					return nil, nil, err
+					return nil, nil, 0, err
 				}
-				accessories = append(accessories, a)
+				PriceOfAllBicycles = b.Price * float32(cart.Quantity)
+				totalPrice = totalPrice + PriceOfAllBicycles
+				bicycle.Bicycle = &b
+				bicycle.Quantity = cart.Quantity
+				bicycle.PriceOfBicycle = PriceOfAllBicycles
+				bicycles = append(bicycles, bicycle)
 			}
 		}
 
 	}
 
-	return accessories, bicycle, nil
+	return accessories, bicycles, totalPrice, nil
 }
 func (s *Store) ChangeProductsQuantity(productID, action string, amount int) error {
 	if action == "inc" {
