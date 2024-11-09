@@ -48,3 +48,32 @@ func (s *Store) DeleteFromCart(userID, productID string) error {
 	}
 	return nil
 }
+
+func (s *Store) CheckIfProductInCart(userID, productID string) (bool, error) {
+	row, err := s.db.Query("select * from cart where user_id=? and product_id=?", userID, productID)
+	if err != nil {
+		return false, err
+	}
+	for row.Next() {
+		var c types.Cart
+		err = row.Scan(&c.UserId, &c.Product_id, &c.Quantity, &c.Created)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return false, nil
+			}
+			return false, err
+		}
+		if productID == c.Product_id {
+			return true, nil
+		}
+
+	}
+	return false, nil
+}
+func (s *Store) ChangeProductsQuantity(userID, ProductID string, amount int) error {
+	_, err := s.db.Exec("update cart set quantity = quantity+? where user_id=? and product_id =?", amount, userID, ProductID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
