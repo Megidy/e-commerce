@@ -3,7 +3,6 @@ package cart
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"strconv"
 
 	carts "github.com/Megidy/e-commerce/frontend/templates/cart"
@@ -39,15 +38,15 @@ func (h *Handler) GetCart(c *gin.Context) {
 	cart, err := h.cartStore.GetCart(user.ID)
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatus(http.StatusBadRequest)
+		return
 	}
-	accessories, bicycles, err := h.productStore.GetAllProducts(cart)
+	accessories, bicycles, totalPrice, err := h.productStore.GetAllProducts(cart)
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatus(http.StatusBadRequest)
+		return
 	}
 
-	carts.LoadCart(bicycles, accessories).Render(c.Request.Context(), c.Writer)
+	carts.LoadCart(accessories, bicycles, totalPrice).Render(c.Request.Context(), c.Writer)
 
 }
 func (h *Handler) AddToCart(c *gin.Context) {
