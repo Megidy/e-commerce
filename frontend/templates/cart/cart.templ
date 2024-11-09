@@ -1,11 +1,12 @@
 package templates
 
-import "github.com/Megidy/e-commerce/types"
+import (
+	"fmt"
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
+	"github.com/Megidy/e-commerce/types"
+)
 
-
-import templates "github.com/Megidy/e-commerce/frontend/templates/user"
-
-templ LoadCart(bicycles []types.Bicycle,accessories []types.Accessory) {
+templ LoadCart(accessories []types.CartAccessoryResponse, bicycles []types.CartBicycleResponse, totalPrice float32) {
 	@templates.Page(true)
 	<!DOCTYPE html>
 	<html lang="en">
@@ -16,13 +17,17 @@ templ LoadCart(bicycles []types.Bicycle,accessories []types.Accessory) {
 			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
 		</head>
 		<body>
-            for _,bicycle:=range bicycles{
-                @BicycleTile(&bicycle)
-            }
-            for _,accessory:=range accessories{
-                @AccessoryTile(&accessory)
-            }
-            
+			<div>
+				<ul>
+					for _,bicycle:=range bicycles {
+						@BicycleTile(&bicycle)
+					}
+					for _,accessory:=range accessories {
+						@AccessoryTile(&accessory)
+					}
+				</ul>
+				totalPrice :{ fmt.Sprintf("totalPrice:%f",totalPrice) }
+			</div>
 		</body>
 	</html>
 }

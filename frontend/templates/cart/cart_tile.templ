@@ -5,41 +5,45 @@ import (
 	"github.com/Megidy/e-commerce/types"
 )
 
-templ BicycleTile(bicycle *types.Bicycle) {
+templ BicycleTile(bicycle *types.CartBicycleResponse) {
 	<li
-		id={ fmt.Sprintf("bicycle-%s", bicycle.Id) }
+		id={ fmt.Sprintf("bicycle-%s", bicycle.Bicycle.Id) }
 	>
-		<a href={ templ.URL(fmt.Sprintf("/products/bicycles/%s", bicycle.Id)) }>
+		<a href={ templ.URL(fmt.Sprintf("/products/bicycle/%s", bicycle.Bicycle.Id)) }>
 			<span>
 				<img
-					src={ bicycle.Image }
+					src={ bicycle.Bicycle.Image }
 				/>
-				{ bicycle.Name }
+				{ bicycle.Bicycle.Name }
+				{fmt.Sprintf("%d",bicycle.Quantity)}
+				{fmt.Sprintf("%f",bicycle.PriceOfBicycle)}
 				<br/>
-				Price : { fmt.Sprintf("%f",bicycle.Price) }
+				Price : { fmt.Sprintf("%f",bicycle.Bicycle.Price) }
 			</span>
 		</a>
-		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",bicycle.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#bicycle-%s",bicycle.Id)}>
+		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",bicycle.Bicycle.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#bicycle-%s",bicycle.Bicycle.Id)}>
 			delete from cart
 		</button>
 	</li>
 }
 
-templ AccessoryTile(accessory *types.Accessory) {
+templ AccessoryTile(accessory *types.CartAccessoryResponse) {
 	<li
-		id={ fmt.Sprintf("accessory-%s", accessory.Id) }
+		id={ fmt.Sprintf("accessory-%s", accessory.Accessory.Id) }
 	>
-		<a href={ templ.URL(fmt.Sprintf("/products/accessories/%s", accessory.Id)) }>
+		<a href={ templ.URL(fmt.Sprintf("/products/accessory/%s", accessory.Accessory.Id)) }>
 			<span>
 				<img
-					src={ accessory.Image }
+					src={ accessory.Accessory.Image }
 				/>
-				{ accessory.Name }
+				{ accessory.Accessory.Name }
+				{fmt.Sprintf("%d",accessory.Quantity)}
+				{fmt.Sprintf("%f",accessory.PriceOfAccessory)}
 				<br/>
-				Price : { fmt.Sprintf("%f",accessory.Price) }
+				Price : { fmt.Sprintf("%f",accessory.Accessory.Price) }
 			</span>
 		</a>
-		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",accessory.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#accessory-%s",accessory.Id)}>
+		<button hx-delete={fmt.Sprintf("/cart/deletefromcart/%s",accessory.Accessory.Id)} hx-swap="delete" hx-target={fmt.Sprintf("#accessory-%s",accessory.Accessory.Id)}>
 			delete from cart
 		</button>
 	</li>
