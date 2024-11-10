@@ -16,9 +16,10 @@ CREATE TABLE IF NOT EXISTS accessories(
     description VARCHAR(255) NOT NULL,   
     quantity INT NOT NULL,
     price FLOAT NOT NULL,
+    category VARCHAR(255),
     image VARCHAR(255)
 );
-CREATE TABLE IF NOT EXISTS bicycles(
+CREATE TABLE IF NOT EXISTS bicycles (
     id VARCHAR(36) PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
@@ -28,8 +29,18 @@ CREATE TABLE IF NOT EXISTS bicycles(
     material VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     price FLOAT NOT NULL,
-    image VARCHAR(255)
+    image VARCHAR(255),
+    color VARCHAR(50) NOT NULL,
+    weight FLOAT,
+    release_year INT,
+    brake_system VARCHAR(100),
+    gears INT,
+    brand VARCHAR(255) NOT NULL,
+    suspension VARCHAR(100),
+    wheel_size INT,
+    frame_size VARCHAR(50)
 );
+
 
 CREATE TABLE IF NOT EXISTS cart(
 	user_id VARCHAR(255) NOT NULL,
@@ -45,3 +56,5 @@ CREATE TABLE IF NOT EXISTS orders(
     status VARCHAR(255),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS reviews();
