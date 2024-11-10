@@ -74,6 +74,15 @@ type Bicycle struct {
 	Quantity    int
 	Price       float32
 	Image       string
+	Color       string
+	Weight      float32
+	ReleaseYear int
+	BrakeSystem string
+	Gears       int
+	Brand       string
+	Suspension  string
+	WheelSize   int
+	FrameSize   string
 }
 
 type Cart struct {

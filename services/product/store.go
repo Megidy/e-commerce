@@ -48,7 +48,7 @@ func (s *Store) GetAllBicycles() ([]types.Bicycle, error) {
 	}
 	for rows.Next() {
 		var b types.Bicycle
-		err := rows.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+		err := rows.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image, &b.Color, &b.Weight, &b.ReleaseYear, &b.BrakeSystem, &b.Gears, &b.Brand, &b.Suspension, &b.WheelSize, &b.FrameSize)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				return nil, nil
@@ -70,7 +70,7 @@ func (s *Store) GetBicycleById(id string) (types.Bicycle, error) {
 	}
 	for row.Next() {
 
-		err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+		err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image, &b.Color, &b.Weight, &b.ReleaseYear, &b.BrakeSystem, &b.Gears, &b.Brand, &b.Suspension, &b.WheelSize, &b.FrameSize)
 		if err != nil {
 			return types.Bicycle{}, err
 
@@ -133,7 +133,7 @@ func (s *Store) GetAllProductsForCart(carts []types.Cart) ([]types.CartAccessory
 			}
 			for row.Next() {
 				var b types.Bicycle
-				err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image)
+				err := row.Scan(&b.Id, &b.Name, &b.Model, &b.Description, &b.Type, &b.Size, &b.Material, &b.Quantity, &b.Price, &b.Image, &b.Color, &b.Weight, &b.ReleaseYear, &b.BrakeSystem, &b.Gears, &b.Brand, &b.Suspension, &b.WheelSize, &b.FrameSize)
 				if err != nil {
 					return nil, nil, 0, err
 				}
