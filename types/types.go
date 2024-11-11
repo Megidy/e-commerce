@@ -53,6 +53,9 @@ type CartStore interface {
 	ProductInCart(userID, productID string) (bool, error)
 	ChangeCartsProductQuantity(userID, ProductID, action string, amount int) error
 }
+type OrderStore interface {
+	CreateOrder(order Order, cart []Cart) error
+}
 type Accessory struct {
 	Id          string
 	Name        string
@@ -92,6 +95,18 @@ type Cart struct {
 	Created    string
 }
 
+type Order struct {
+	Order_id string
+	User_id  string
+	Status   string
+	Created  string
+}
+
+type OrderProduct struct {
+	Order_id   string
+	Product_id string
+	Quantity   int
+}
 type CartBicycleResponse struct {
 	Bicycle        *Bicycle
 	Quantity       int
