@@ -85,7 +85,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 	logInPayload.Email = h.templates.GetDataFromForm(c, "email")
 	logInPayload.Password = h.templates.GetDataFromForm(c, "password")
 
-	log.Println(logInPayload)
+	log.Println("login payload :", logInPayload)
 
 	ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
 	if err != nil {
@@ -93,6 +93,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 		return
 	}
 	if !ok {
+		c.Writer.Header().Add("hasEmail", "false")
 		templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 		return
 	} else if ok {
@@ -104,6 +105,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 
 		ok := auth.ComparePassword(user.Password, logInPayload.Password)
 		if !ok {
+			c.Writer.Header().Add("correctPassword", "false")
 			templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 			return
 		}
@@ -114,7 +116,8 @@ func (h *Handler) LogIn(c *gin.Context) {
 			return
 		}
 		c.Writer.Header().Add("HX-Redirect", "/products/accessories")
-		log.Println(secret)
+
+		log.Println("cookie :", secret)
 		c.SetSameSite(http.SameSiteLaxMode)
 		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
 
