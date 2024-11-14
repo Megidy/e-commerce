@@ -50,11 +50,16 @@ CREATE TABLE IF NOT EXISTS cart(
 );
 
 CREATE TABLE IF NOT EXISTS orders(
+    order_id VARCHAR(255) NOT NULL,
 	user_id VARCHAR(255) NOT NULL,
-    product_id VARCHAR(255) NOT NULL,
-    quantity VARCHAR(255) NOT NULL,
     status VARCHAR(255),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS orders_products(
+    order_id VARCHAR(255) NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
+    quantity int NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS reviews();
