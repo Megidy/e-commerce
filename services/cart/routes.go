@@ -25,10 +25,10 @@ func NewHandler(userStore types.UserStore, cartStore types.CartStore, productSto
 	return &Handler{userStore: userStore, cartStore: cartStore, productStore: productStore, templates: templates}
 }
 
-func (h *Handler) RegisterRoutes(router gin.IRouter) {
-	router.GET("/cart", auth.NewHandler(h.userStore).WithJWT, h.GetCart)
-	router.POST("/products/addtocart/:productID", auth.NewHandler(h.userStore).WithJWT, h.AddToCart)
-	router.DELETE("/cart/deletefromcart/:productID", auth.NewHandler(h.userStore).WithJWT, h.DeleteFromCart)
+func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler) {
+	router.GET("/cart", authHandler.WithJWT, h.GetCart)
+	router.POST("/products/addtocart/:productID", authHandler.WithJWT, h.AddToCart)
+	router.DELETE("/cart/deletefromcart/:productID", authHandler.WithJWT, h.DeleteFromCart)
 }
 
 func (h *Handler) GetCart(c *gin.Context) {

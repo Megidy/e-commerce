@@ -23,13 +23,13 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 		userStore: userStore,
 	}
 }
-func (h *Handler) RegisterRoutes(router gin.IRouter) {
+func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler) {
 	router.GET("/", h.LoadSignUpTemplate)
 	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
 	router.POST("/login/enter", h.LogIn)
-	router.GET("/user", auth.NewHandler(h.userStore).WithJWT, h.UserAccount)
+	router.GET("/user", authHandler.WithJWT, h.UserAccount)
 
 }
 
