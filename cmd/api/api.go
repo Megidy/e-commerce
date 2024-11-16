@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/Megidy/e-commerce/frontend/response"
+	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/services/cart"
 	"github.com/Megidy/e-commerce/services/order"
 	"github.com/Megidy/e-commerce/services/product"
@@ -33,21 +34,24 @@ func (s *APIServer) Run() error {
 	productStore := product.NewStore(s.db)
 	cartStore := cart.NewStore(s.db)
 	orderStore := order.NewStore(s.db)
+
 	NewResponseHandler := response.NewTemplateHandler()
 	router.RedirectFixedPath = true
 	router.RedirectTrailingSlash = true
 
+	authHandler := auth.NewHandler(userStore)
+
 	userHandler := user.NewHandler(NewResponseHandler, userStore)
-	userHandler.RegisterRoutes(router)
+	userHandler.RegisterRoutes(router, authHandler)
 
 	productHandler := product.NewHandler(userStore, productStore)
 	productHandler.RegisterRoutes(router)
 
 	cartHandler := cart.NewHandler(userStore, cartStore, productStore, NewResponseHandler)
-	cartHandler.RegisterRoutes(router)
+	cartHandler.RegisterRoutes(router, authHandler)
 
 	orderHandler := order.NewHandler(userStore, orderStore, productStore, cartStore)
-	orderHandler.RegisterRoutes(router)
+	orderHandler.RegisterRoutes(router, authHandler)
 
 	log.Println("Started Server on port :8080")
 	return router.Run(s.addr)
