@@ -52,6 +52,7 @@ type CartStore interface {
 }
 type OrderStore interface {
 	CreateOrder(order Order, cart []Cart) error
+	GetOrders(userID string) ([]Order, error)
 }
 type Accessory struct {
 	Id          string
