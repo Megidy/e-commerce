@@ -164,3 +164,19 @@ func TestLogIn(t *testing.T) {
 		router.ServeHTTP(rr, req)
 	})
 }
+
+func TestLoadSignUpTemplate(t *testing.T) {
+	r, w := io.Pipe()
+	expectedLabelName := "First Name"
+	go func() {
+		_ = user.Signup(false, "").Render(context.Background(), w)
+		_ = w.Close()
+	}()
+	doc, err := goquery.NewDocumentFromReader(r)
+	if err != nil {
+		t.Errorf("error while creating document :%v", err)
+	}
+	if actualLabelName := doc.Find("label").First().Text(); actualLabelName != expectedLabelName {
+		t.Errorf("expected label name %q , got %q ", expectedLabelName, actualLabelName)
+	}
+}
