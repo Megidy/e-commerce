@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS orders(
     order_id VARCHAR(255) NOT NULL,
 	user_id VARCHAR(255) NOT NULL,
     status VARCHAR(255),
+    total _price INT NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
