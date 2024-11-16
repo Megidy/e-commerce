@@ -1,0 +1,17 @@
+package order
+
+import (
+	"fmt"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ OrderTile(order *types.Order) {
+	<li>
+		<a href={ templ.URL(fmt.Sprintf("/orders/%s", order.Order_id)) }>
+		<p>OrderID : { order.Order_id }</p>
+		<p>Status : { order.Status }</p>
+		<p>Date Created : { order.Created }</p>
+		<p>Total Price : { fmt.Sprintf("%f",order.TotalPrice) }</p>
+        </a>
+	</li>
+}

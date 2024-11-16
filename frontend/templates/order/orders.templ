@@ -1,0 +1,15 @@
+package order
+
+import "github.com/Megidy/e-commerce/types"
+import "github.com/Megidy/e-commerce/frontend/templates/user"
+
+templ LoadOrders(orders []types.Order) {
+	<html>
+    @templates.Page(true)
+		<ul>
+			for _,order:=range orders {
+				@OrderTile(&order)
+			}
+		</ul>
+	</html>
+}
