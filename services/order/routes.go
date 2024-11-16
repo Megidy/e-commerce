@@ -10,12 +10,13 @@ import (
 )
 
 type Handler struct {
-	userStore  types.UserStore
-	orderStore types.OrderStore
-	cartStore  types.CartStore
+	userStore    types.UserStore
+	orderStore   types.OrderStore
+	productStore types.ProductStore
+	cartStore    types.CartStore
 }
 
-func NewHandler(userStore types.UserStore, orderStore types.OrderStore, cartStore types.CartStore) *Handler {
+func NewHandler(userStore types.UserStore, orderStore types.OrderStore, productStore types.ProductStore, cartStore types.CartStore) *Handler {
 	return &Handler{userStore: userStore, orderStore: orderStore, cartStore: cartStore}
 }
 
@@ -41,6 +42,11 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		log.Println(err)
 		return
 	}
+	_, _, totalPrice, err := h.productStore.GetAllProductsForCart(cart)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	for _, c := range cart {
 		err = h.cartStore.DeleteFromCart(c.UserId, c.Product_id)
 		if err != nil {
@@ -48,9 +54,10 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		}
 	}
 	newOrder = types.Order{
-		Order_id: uuid.NewString(),
-		User_id:  user.ID,
-		Status:   "Processing ",
+		Order_id:   uuid.NewString(),
+		User_id:    user.ID,
+		Status:     "Processing ",
+		TotalPrice: totalPrice,
 	}
 	err = h.orderStore.CreateOrder(newOrder, cart)
 	if err != nil {
