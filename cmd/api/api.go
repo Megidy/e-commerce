@@ -46,7 +46,7 @@ func (s *APIServer) Run() error {
 	cartHandler := cart.NewHandler(userStore, cartStore, productStore, NewResponseHandler)
 	cartHandler.RegisterRoutes(router)
 
-	orderHandler := order.NewHandler(userStore, orderStore, cartStore)
+	orderHandler := order.NewHandler(userStore, orderStore, productStore, cartStore)
 	orderHandler.RegisterRoutes(router)
 
 	log.Println("Started Server on port :8080")
