@@ -93,10 +93,11 @@ type Cart struct {
 }
 
 type Order struct {
-	Order_id string
-	User_id  string
-	Status   string
-	Created  string
+	Order_id   string
+	User_id    string
+	Status     string
+	Created    string
+	TotalPrice float32
 }
 
 type OrderProduct struct {
