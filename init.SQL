@@ -53,14 +53,16 @@ CREATE TABLE IF NOT EXISTS orders(
     order_id VARCHAR(255) NOT NULL,
 	user_id VARCHAR(255) NOT NULL,
     status VARCHAR(255),
-    total _price INT NOT NULL,
+    total_price INT NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS orders_products(
+    user_id VARCHAR(255) NOT NULL,
     order_id VARCHAR(255) NOT NULL,
     product_id VARCHAR(255) NOT NULL,
-    quantity int NOT NULL
+    quantity int NOT NULL,
+    total_price FLOAT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS reviews();
