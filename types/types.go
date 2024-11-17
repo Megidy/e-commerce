@@ -51,8 +51,10 @@ type CartStore interface {
 	ChangeCartsProductQuantity(userID, ProductID, action string, amount int) error
 }
 type OrderStore interface {
-	CreateOrder(order Order, cart []Cart) error
+	CreateOrder(order Order) error
 	GetOrders(userID string) ([]Order, error)
+	GetOrderById(userID, orderId string) (Order, error)
+	CreateOrdersProducts(order Order, cart Cart, totalPrice float32) error
 }
 type Accessory struct {
 	Id          string
