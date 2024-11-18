@@ -26,8 +26,7 @@ func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler) 
 	router.POST("/orders/createorder", authHandler.WithJWT, h.CreateOrder)
 	router.GET("/orders", authHandler.WithJWT, h.GetOrders)
 	router.GET("/orders/:orderID", authHandler.WithJWT, h.GetOrderById)
-	router.GET("orders/:orderID/:productID")
-	router.DELETE("/orders/:orderID/cancel")
+	router.DELETE("/orders/:orderID/cancel", authHandler.WithJWT, h.CancelOrder)
 
 }
 
@@ -166,5 +165,20 @@ func (h *Handler) GetOrderById(c *gin.Context) {
 
 	}
 	order.OrderPage(o, ordersProducts, bicycles, accessories).Render(c.Request.Context(), c.Writer)
+}
 
+func (h *Handler) CancelOrder(c *gin.Context) {
+	u, ok := c.Get("user")
+	if !ok {
+		return
+	}
+	orderID := c.Param("orderID")
+	user := u.(types.User)
+	err := h.orderStore.CancelOrder(orderID, user.ID)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	redirectURL := "/orders"
+	c.Writer.Header().Add("HX-Redirect", redirectURL)
 }
