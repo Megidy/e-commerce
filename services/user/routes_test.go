@@ -41,6 +41,32 @@ func (m *mockTemplate) GetDataFromForm(c *gin.Context, key string) string {
 		if key == "password" {
 			return "FailTestPassword"
 		}
+	case "SignUp:Pass:CorrectPayload":
+		if key == "name" {
+			return "pass-name"
+		}
+		if key == "lastname" {
+			return "pass-lastname"
+		}
+		if key == "email" {
+			return "pass-email@gmail.com"
+		}
+		if key == "password" {
+			return "pass-password"
+		}
+	case "SignUp:Fail:BadPayload":
+		if key == "name" {
+			return "fail-name"
+		}
+		if key == "lastname" {
+			return "fail-lastname"
+		}
+		if key == "email" {
+			return "fail-emailgmail.com"
+		}
+		if key == "password" {
+			return "fail-password"
+		}
 	}
 
 	return ""
@@ -53,7 +79,10 @@ func (m *mockUserStore) CreateUser(user *types.User) error {
 	return nil
 }
 func (m *mockUserStore) AlreadyExists(user *types.User) (bool, error) {
-	if user.Email == "Fail:NoEmailFound,TestEmail@gmail.com" {
+	switch user.Email {
+	case "Fail:NoEmailFound,TestEmail@gmail.com":
+		return false, nil
+	case "pass-email@gmail.com":
 		return false, nil
 	}
 
@@ -179,4 +208,51 @@ func TestLoadSignUpTemplate(t *testing.T) {
 	if actualLabelName := doc.Find("label").First().Text(); actualLabelName != expectedLabelName {
 		t.Errorf("expected label name %q , got %q ", expectedLabelName, actualLabelName)
 	}
+}
+
+func TestSignUp(t *testing.T) {
+	userStore := &mockUserStore{}
+	t.Run("Should Pass if Payload is correct ", func(t *testing.T) {
+		template := &mockTemplate{Case: "SignUp:Pass:CorrectPayload"}
+		handler := NewHandler(template, userStore)
+		req, err := http.NewRequest(http.MethodPost, "/signup/create", nil)
+		if err != nil {
+			t.Errorf("error while creating new request: %v", err)
+		}
+		rr := httptest.NewRecorder()
+
+		router := gin.Default()
+		router.POST("/signup/create", func(c *gin.Context) {
+			handler.SignUp(c)
+			header := c.Writer.Header().Get("exists")
+			if header == "true" {
+				t.Errorf("expeceted email not to exist , header : %s", header)
+			}
+			header = c.Writer.Header().Get("email")
+			if header == "!ok" {
+				t.Errorf("expected to fail when header == !ok , header : %s", header)
+			}
+		})
+		router.ServeHTTP(rr, req)
+	})
+	t.Run("Should fail if email doesn't contains '@'", func(t *testing.T) {
+		template := &mockTemplate{Case: "SignUp:Fail:BadPayload"}
+		handler := NewHandler(template, userStore)
+		req, err := http.NewRequest(http.MethodPost, "/signup/create", nil)
+		if err != nil {
+			t.Errorf("error while creating new request : %v", err)
+		}
+
+		rr := httptest.NewRecorder()
+		router := gin.Default()
+
+		router.POST("/signup/create", func(c *gin.Context) {
+			handler.SignUp(c)
+
+			if header := c.Writer.Header().Get("email"); header != "!ok" {
+				t.Errorf("expected to fail when header == !ok , header : %s", header)
+			}
+		})
+		router.ServeHTTP(rr, req)
+	})
 }
