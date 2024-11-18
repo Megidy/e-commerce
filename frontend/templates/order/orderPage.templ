@@ -5,7 +5,8 @@ import "fmt"
 import "github.com/Megidy/e-commerce/frontend/templates/user"
 
 templ OrderPage(order types.Order, ordersProducts []types.OrderProduct, bicycles []types.Bicycle, accessories []types.Accessory) {
-	<html>
+    <div id="order">
+    <html>
     @templates.Page(true)
 		<h1>order Id : { order.Order_id }</h1>
 		<h1>order Created : { order.Created }</h1>
@@ -25,5 +26,7 @@ templ OrderPage(order types.Order, ordersProducts []types.OrderProduct, bicycles
                 }
             }
         </ul>
+        <button hx-delete={ fmt.Sprintf("/orders/%s/cancel", order.Order_id) } hx-swap="outerHTML" hx-target="#order" >Cancel Order</button>
 	</html>
+</div>
 }
