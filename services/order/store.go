@@ -85,3 +85,12 @@ func (s *Store) GetOrdersProducts(userID, orderID string) ([]types.OrderProduct,
 	}
 	return products, nil
 }
+
+func (s *Store) CancelOrder(orderID, userID string) error {
+	status := "canceled"
+	_, err := s.db.Exec("update orders set status=? where order_id =? and user_id=?", status, orderID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
