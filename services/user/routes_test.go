@@ -12,6 +12,7 @@ import (
 	"github.com/Megidy/e-commerce/types"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type mockTemplate struct {
@@ -255,4 +256,32 @@ func TestSignUp(t *testing.T) {
 		})
 		router.ServeHTTP(rr, req)
 	})
+}
+func TestUserAcccount(t *testing.T) {
+	t.Run("Should Pass if template is ok ", func(t *testing.T) {
+		r, w := io.Pipe()
+		var u types.User = types.User{
+			ID:       uuid.NewString(),
+			Name:     "testName",
+			LastName: "testLastName",
+			Email:    "email@123pleasypass",
+			Password: "testpass",
+			Created:  "11.11.1111",
+			Role:     "user",
+		}
+		go func() {
+
+			user.UserAccount(u).Render(context.Background(), w)
+			w.Close()
+		}()
+		expectedH1 := u.Name
+		doc, err := goquery.NewDocumentFromReader(r)
+		if err != nil {
+			t.Errorf("error while creating doc : %v", err)
+		}
+		if actualH1 := doc.Find("h1").First().Text(); actualH1 != expectedH1 {
+			t.Errorf("expected h1 name : %s , got %s", expectedH1, actualH1)
+		}
+	})
+
 }
