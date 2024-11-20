@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -26,19 +25,19 @@ func (h *Handler) WithJWT(c *gin.Context) {
 
 	tokenString, err := c.Cookie("Authorization")
 	if err != nil {
-		log.Println(1)
+		c.Writer.Header().Add("authorization", "false")
 		RedirectToLogin(c)
 		return
 	}
 	token, err := ValidateJWT(tokenString)
 	if err != nil {
-		log.Println(2)
+		c.Writer.Header().Add("authorization", "false")
 		RedirectToLogin(c)
 		return
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			log.Println(3)
+			c.Writer.Header().Add("authorization", "false")
 			RedirectToLogin(c)
 			return
 		}
