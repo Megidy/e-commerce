@@ -84,20 +84,18 @@ func (h *Handler) SignUp(c *gin.Context) {
 		templates.Signup(true, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
-	c.Writer.Header().Add("HX-Redirect", "/products/accessories")
 
 	log.Println("cookie :", secret)
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
-
-	c.Writer.Header().Add("HX-Redirect", "/login")
+	c.SetCookie("Authorization", secret, 3600*24*10, "/", "", false, true)
+	c.Writer.Header().Add("HX-Redirect", "/products/accessories")
 }
 
 func (h *Handler) LoadSignUpTemplate(c *gin.Context) {
 	templates.Signup(false, "").Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) LoadLogInTemplate(c *gin.Context) {
-	templates.Login(false, "").Render(c.Request.Context(), c.Writer)
+	templates.Login(true, "You have to be authorized to purchase items!").Render(c.Request.Context(), c.Writer)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
@@ -140,7 +138,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 
 		log.Println("cookie :", secret)
 		c.SetSameSite(http.SameSiteLaxMode)
-		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
+		c.SetCookie("Authorization", secret, 3600*24*10, "/", "", false, true)
 
 	}
 }
