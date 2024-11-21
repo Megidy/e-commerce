@@ -57,6 +57,8 @@ type OrderStore interface {
 	CreateOrdersProducts(order Order, cart Cart, totalPrice float32) error
 	GetOrdersProducts(userID, orderID string) ([]OrderProduct, error)
 	CancelOrder(orderID, userID string) error
+	AddOrdersDetails(orderDetails OrderDetails) error
+	GetOrderDetails(orderID, userID string) (OrderDetails, error)
 }
 type Accessory struct {
 	Id          string
@@ -112,6 +114,20 @@ type OrderProduct struct {
 	Quantity   int
 	TotalPrice float32
 }
+
+type OrderDetails struct {
+	UserId      string
+	Order_Id    string
+	FirstName   string
+	LastName    string
+	Email       string
+	PhoneNumber string
+	Country     string
+	City        string
+	Street      string
+	House       string
+}
+
 type CartBicycleResponse struct {
 	Bicycle        *Bicycle
 	Quantity       int
