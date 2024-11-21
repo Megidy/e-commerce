@@ -65,4 +65,17 @@ CREATE TABLE IF NOT EXISTS orders_products(
     total_price FLOAT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS  order_details (
+    user_id VARCHAR(255) NOT NULL,
+    order_id VARCHAR(255) NOT NULL,
+    first_name   VARCHAR(255) NOT NULL,
+	last_name    VARCHAR(255) NOT NULL,
+	email       VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(255) NOT NULL,
+	country     VARCHAR(255) NOT NULL,
+	city        VARCHAR(255) NOT NULL,
+	street      VARCHAR(255) NOT NULL,
+	house       VARCHAR(255) NOT NULL
+    );
+
 CREATE TABLE IF NOT EXISTS reviews();
