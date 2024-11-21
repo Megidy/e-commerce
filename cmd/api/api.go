@@ -35,22 +35,22 @@ func (s *APIServer) Run() error {
 	cartStore := cart.NewStore(s.db)
 	orderStore := order.NewStore(s.db)
 
-	NewResponseHandler := response.NewTemplateHandler()
+	NewTemplateHandler := response.NewTemplateHandler()
 	router.RedirectFixedPath = true
 	router.RedirectTrailingSlash = true
 
 	authHandler := auth.NewHandler(userStore)
 
-	userHandler := user.NewHandler(NewResponseHandler, userStore)
+	userHandler := user.NewHandler(NewTemplateHandler, userStore)
 	userHandler.RegisterRoutes(router, authHandler)
 
 	productHandler := product.NewHandler(userStore, productStore)
 	productHandler.RegisterRoutes(router)
 
-	cartHandler := cart.NewHandler(userStore, cartStore, productStore, NewResponseHandler)
+	cartHandler := cart.NewHandler(userStore, cartStore, productStore, NewTemplateHandler)
 	cartHandler.RegisterRoutes(router, authHandler)
 
-	orderHandler := order.NewHandler(userStore, orderStore, productStore, cartStore)
+	orderHandler := order.NewHandler(NewTemplateHandler, userStore, orderStore, productStore, cartStore)
 	orderHandler.RegisterRoutes(router, authHandler)
 
 	log.Println("Started Server on port :8080")
