@@ -4,7 +4,7 @@ import "github.com/Megidy/e-commerce/types"
 import "fmt"
 import "github.com/Megidy/e-commerce/frontend/templates/user"
 
-templ OrderPage(order types.Order, ordersProducts []types.OrderProduct, bicycles []types.Bicycle, accessories []types.Accessory) {
+templ OrderPage(order types.Order, ordersProducts []types.OrderProduct,orderDetails types.OrderDetails, bicycles []types.Bicycle, accessories []types.Accessory) {
     <div id="order">
     <html>
     @templates.Page(true)
@@ -12,6 +12,10 @@ templ OrderPage(order types.Order, ordersProducts []types.OrderProduct, bicycles
 		<h1>order Created : { order.Created }</h1>
 		<h1>order Total Price : { fmt.Sprintf("%f",order.TotalPrice)  }</h1>
         <h1>order Status : {order.Status}</h1>
+        <h1>order Details : </h1>
+        <h1>name of client : {orderDetails.FirstName}</h1>
+        <h1>Phone number of client : {orderDetails.PhoneNumber}</h1>
+        <h1>adderes of delivery : {orderDetails.Country}, {orderDetails.City} ,{orderDetails.Street} ,{orderDetails.House}</h1>
         <ul>
             for _,product:=range ordersProducts{
                 for _,bicycle:=range bicycles{
