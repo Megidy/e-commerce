@@ -94,3 +94,26 @@ func (s *Store) CancelOrder(orderID, userID string) error {
 	}
 	return nil
 }
+
+func (s *Store) AddOrdersDetails(orderDetails types.OrderDetails) error {
+	_, err := s.db.Exec("insert into order_details values(?,?,?,?,?,?,?,?,?,?)", orderDetails.UserId, orderDetails.Order_Id, orderDetails.FirstName, orderDetails.LastName, orderDetails.Email, orderDetails.PhoneNumber, orderDetails.Country, orderDetails.City, orderDetails.Street, orderDetails.House)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) GetOrderDetails(orderID, userID string) (types.OrderDetails, error) {
+	var orderDetails types.OrderDetails
+	row, err := s.db.Query("select * from order_details where order_id=? and user_id=?", orderID, userID)
+	if err != nil {
+		return types.OrderDetails{}, err
+	}
+	for row.Next() {
+		err = row.Scan(&orderDetails.UserId, &orderDetails.Order_Id, &orderDetails.FirstName, &orderDetails.LastName, &orderDetails.Email, &orderDetails.PhoneNumber, &orderDetails.Country, &orderDetails.City, &orderDetails.Street, &orderDetails.House)
+		if err != nil {
+			return types.OrderDetails{}, nil
+		}
+	}
+	return orderDetails, nil
+}
