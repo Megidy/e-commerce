@@ -7,6 +7,7 @@ import (
 )
 
 templ LoadCart(accessories []types.CartAccessoryResponse, bicycles []types.CartBicycleResponse, totalPrice float32) {
+	
 	@templates.Page(true)
 	<!DOCTYPE html>
 	<html lang="en">
@@ -17,17 +18,22 @@ templ LoadCart(accessories []types.CartAccessoryResponse, bicycles []types.CartB
 			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
 		</head>
 		<body>
-			<div>
-				<ul>
-					for _,bicycle:=range bicycles {
-						@BicycleTile(&bicycle)
-					}
-					for _,accessory:=range accessories {
-						@AccessoryTile(&accessory)
-					}
-				</ul>
-				totalPrice :{ fmt.Sprintf("totalPrice:%f",totalPrice) }
-			</div>
+			if totalPrice>0 {
+				<div>
+					<ul>
+						for _,bicycle:=range bicycles {
+							@BicycleTile(&bicycle)
+						}
+						for _,accessory:=range accessories {
+							@AccessoryTile(&accessory)
+						}
+					</ul>
+					{ fmt.Sprintf("totalPrice:%f",totalPrice) }
+				</div>
+				<button hx-post="/orders/confirm/redirect">Make Order</button>
+			} else {
+				<p>cart is empty</p>
+			}
 		</body>
 	</html>
 }

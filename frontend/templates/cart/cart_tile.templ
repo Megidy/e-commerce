@@ -31,7 +31,7 @@ templ AccessoryTile(accessory *types.CartAccessoryResponse) {
 	<li
 		id={ fmt.Sprintf("accessory-%s", accessory.Accessory.Id) }
 	>
-		<a href={ templ.URL(fmt.Sprintf("/products/accessory/%s", accessory.Accessory.Id)) }>
+		<a href={ templ.URL(fmt.Sprintf("/	products/accessory/%s", accessory.Accessory.Id)) }>
 			<span>
 				<img
 					src={ accessory.Accessory.Image }
