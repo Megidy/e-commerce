@@ -28,6 +28,7 @@ templ LoadSingleBicycle(bicycle types.Bicycle, isAddingToCart bool, message stri
 					<p>Material { bicycle.Material }</p>
 					<p>Quantity : { fmt.Sprintf("%d",bicycle.Quantity) }</p>
 					<p>Price : { fmt.Sprintf("%f",bicycle.Price) }</p>
+					<p>Brand : {bicycle.Brand}</p>
 					if isAddingToCart {
 						<form
 							hx-post={ fmt.Sprintf("/products/addtocart/%s", bicycle.Id) }

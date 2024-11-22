@@ -87,7 +87,7 @@ templ Login(hasMessage bool, message string) {
             </style>
 		</head>
 		<body>
-			<div class="login">
+			<div class="login" id="loginform">
 				<form hx-post="/login/enter/" hx-swap="outerHTML" hx-target=".overall">
 					<div class="form-group">
 						<label for="email">Email</label>

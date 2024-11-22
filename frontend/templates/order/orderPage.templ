@@ -30,7 +30,10 @@ templ OrderPage(order types.Order, ordersProducts []types.OrderProduct,orderDeta
                 }
             }
         </ul>
-        <button hx-delete={ fmt.Sprintf("/orders/%s/cancel", order.Order_id) } hx-swap="outerHTML" hx-target="#order" >Cancel Order</button>
+        if order.Status!="canceled"{
+             <button hx-delete={ fmt.Sprintf("/orders/%s/cancel", order.Order_id) } hx-swap="outerHTML" hx-target="#order" >Cancel Order</button>
+        }
+       
 	</html>
 </div>
 }

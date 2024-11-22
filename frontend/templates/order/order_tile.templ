@@ -6,35 +6,72 @@ import (
 )
 
 templ OrderTile(order *types.Order) {
-	<li>
+	<li id={fmt.Sprintf("orderID-%s",order.Order_id)}>
 		<a href={ templ.URL(fmt.Sprintf("/orders/%s", order.Order_id)) }>
 			<p>OrderID : { order.Order_id }</p>
 			<p>Status : { order.Status }</p>
 			<p>Date Created : { order.Created }</p>
 			<p>Total Price : { fmt.Sprintf("%f",order.TotalPrice) }</p>
 		</a>
+		
 	</li>
 }
 
 templ OrderPageBicycleTile(bicycle *types.Bicycle, orderProduct *types.OrderProduct) {
 	<li>
-		<a href={templ.URL(fmt.Sprintf("/products/bicycle/%s",bicycle.Id))}>
-			<img src={bicycle.Image}>
-			<p>Name : {bicycle.Name}</p>
-			<p>Quantity: {fmt.Sprintf("%d",orderProduct.Quantity)}</p>
-			<p>TotalPrice : {fmt.Sprintf("%f",orderProduct.TotalPrice)}</p>
+		<a href={ templ.URL(fmt.Sprintf("/products/bicycle/%s", bicycle.Id)) }>
+			<img src={ bicycle.Image }/>
+			<p>Name : { bicycle.Name }</p>
+			<p>Quantity: { fmt.Sprintf("%d",orderProduct.Quantity) }</p>
+			<p>TotalPrice : { fmt.Sprintf("%f",orderProduct.TotalPrice) }</p>
 		</a>
 	</li>
 }
 
 templ OrderPageAccessoryTile(accessory *types.Accessory, orderProduct *types.OrderProduct) {
-
 	<li>
-		<a href={templ.URL(fmt.Sprintf("/products/accessory/%s",accessory.Id))}>
-			<img src={accessory.Image}>
-			<p>Name : {accessory.Name}</p>
-			<p>Quantity: {fmt.Sprintf("%d",orderProduct.Quantity)}</p>
-			<p>TotalPrice : {fmt.Sprintf("%f",orderProduct.TotalPrice)}</p>
+		<a href={ templ.URL(fmt.Sprintf("/products/accessory/%s", accessory.Id)) }>
+			<img src={ accessory.Image }/>
+			<p>Name : { accessory.Name }</p>
+			<p>Quantity: { fmt.Sprintf("%d",orderProduct.Quantity) }</p>
+			<p>TotalPrice : { fmt.Sprintf("%f",orderProduct.TotalPrice) }</p>
+		</a>
+	</li>
+}
+templ BicycleTile(bicycle *types.CartBicycleResponse) {
+	<li
+		id={ fmt.Sprintf("bicycle-%s", bicycle.Bicycle.Id) }
+	>
+		<a href={ templ.URL(fmt.Sprintf("/products/bicycle/%s", bicycle.Bicycle.Id)) }>
+			<span>
+				<img
+					src={ bicycle.Bicycle.Image }
+				/>
+				{ bicycle.Bicycle.Name }
+				{fmt.Sprintf("%d",bicycle.Quantity)}
+				{fmt.Sprintf("%f",bicycle.PriceOfBicycle)}
+				<br/>
+				Price : { fmt.Sprintf("%f",bicycle.Bicycle.Price) }
+			</span>
+		</a>
+	</li>
+}
+
+templ AccessoryTile(accessory *types.CartAccessoryResponse) {
+	<li
+		id={ fmt.Sprintf("accessory-%s", accessory.Accessory.Id) }
+	>
+		<a href={ templ.URL(fmt.Sprintf("/	products/accessory/%s", accessory.Accessory.Id)) }>
+			<span>
+				<img
+					src={ accessory.Accessory.Image }
+				/>
+				{ accessory.Accessory.Name }
+				{fmt.Sprintf("%d",accessory.Quantity)}
+				{fmt.Sprintf("%f",accessory.PriceOfAccessory)}
+				<br/>
+				Price : { fmt.Sprintf("%f",accessory.Accessory.Price) }
+			</span>
 		</a>
 	</li>
 }
