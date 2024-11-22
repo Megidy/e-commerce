@@ -1,7 +1,9 @@
 package templates
 
 templ Login(hasMessage bool, message string) {
-    @Page(true)
+    <div class="overall">
+         @Page(true)
+    
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -33,7 +35,7 @@ templ Login(hasMessage bool, message string) {
                 .form-group label {
                     display: block;
                     margin-bottom: 5px;
-                    color: #F2CD5D;
+                    color: #ffffff;
                     font-weight: bold;
                 }
                 .form-group input {
@@ -47,28 +49,28 @@ templ Login(hasMessage bool, message string) {
                 .btn {
                     width: 100%;
                     padding: 10px;
-                    background-color: #F2CD5D;
+                    background-color: #ffffff;
                     border: none;
                     border-radius: 5px;
-                    color: #3A1772;
+                    color: #1b4f48;
                     font-size: 18px;
                     font-weight: bold;
                     cursor: pointer;
                 }
                 .btn:hover {
                     background-color: #FFF;
-                    color: #3A1772;
+                    color: #1b4f48;
                 }
-                a {
-                    color: #3A1772;
+                .link {
+                    color: #1b4f48;
                     font-size: 18px;
                     text-align: center;
                 }
-                a:hover {
+                .link:hover {
                     text-decoration: underline;
                 }
                 .message {
-                    color: #3A1772;
+                    color: #1b4f48;
                     margin-top: 20px;
                     font-weight: bold;
                     min-height: 20px;
@@ -85,8 +87,8 @@ templ Login(hasMessage bool, message string) {
             </style>
 		</head>
 		<body>
-			<div class="login">
-				<form hx-post="/login/enter/" hx-swap="outerHTML" hx-target=".login">
+			<div class="login" id="loginform">
+				<form hx-post="/login/enter/" hx-swap="outerHTML" hx-target=".overall">
 					<div class="form-group">
 						<label for="email">Email</label>
 						<input type="email" id="email" name="email" required/>
@@ -96,7 +98,7 @@ templ Login(hasMessage bool, message string) {
 						<input type="password" id="password" name="password" required/>
 					</div>
 					<button type="submit" class="btn">LogIn</button>
-                    <div><a href="/signup">Dont have account yet?</a>.<br></div>
+                    <div><a href="/signup" class="link" >Dont have account yet?</a>.<br></div>
 					<div class="message">
                         {message}
                     </div>         
@@ -104,4 +106,5 @@ templ Login(hasMessage bool, message string) {
 			</div>
 		</body>
 	</html>
+    </div>
 }

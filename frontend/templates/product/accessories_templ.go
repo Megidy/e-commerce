@@ -8,8 +8,10 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/Megidy/e-commerce/types"
-import "github.com/Megidy/e-commerce/frontend/templates/user"
+import (
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
+	"github.com/Megidy/e-commerce/types"
+)
 
 func LoadAccessories(accessories []types.Accessory) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -32,11 +34,15 @@ func LoadAccessories(accessories []types.Accessory) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"color\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = templates.Page(true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Accessories</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script></head><body><div><ul>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Accessories</title><script src=\"https://unpkg.com/htmx.org@1.9.2\"></script><style>\r\n                .color{\r\n                    background-color: #FFFFFF;\r\n                }\r\n                body {\r\n                    font-family: Arial, sans-serif;\r\n                    background-color: #FFF7E1;\r\n                }\r\n\r\n                .container {\r\n                    display: flex;\r\n                    padding: 20px;\r\n                }\r\n\r\n                .main-content {\r\n                    display: flex;\r\n                    flex-wrap: wrap;\r\n                    justify-content: flex-start;\r\n                    width: 75%;\r\n                    margin-right: 5%;\r\n                }\r\n\r\n                .filter-column {\r\n                    width: 15%;\r\n                    background-color: #DEA54B;\r\n                    padding: 10px;\r\n                    border-radius: 8px;\r\n                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);\r\n                    font-size: 1.5em;\r\n                    position: relative;\r\n                }\r\n\r\n                .filter-column label,\r\n                .filter-column select,\r\n                .filter-column input {\r\n                    display: block;\r\n                    margin-bottom: 15px;\r\n                }\r\n\r\n                .filter-column {\r\n                    max-height: 600px; /* Фіксована довжина */\r\n                    overflow-y: auto; /* Додаємо скролінг, якщо вміст перевищує висоту */\r\n                }\r\n\r\n                .accessory-list {\r\n                    display: flex;\r\n                    flex-wrap: wrap;\r\n                    justify-content: flex-start;\r\n                    padding: 0;\r\n                    list-style: none;\r\n                    gap: 15px;\r\n                }\r\n\r\n                li {\r\n                    background-color: white;\r\n                    color: black;\r\n                    margin: 10px;\r\n                    padding: 15px;\r\n                    border-radius: 8px;\r\n                    text-align: center;\r\n                    width: 200px;\r\n                    transition: background-color 0.3s ease;\r\n                    display: flex;\r\n                    flex-direction: column;\r\n                    align-items: center;\r\n                    font-size: 1.5em; \r\n                }\r\n\r\n                li .name,\r\n                li .price {\r\n                    background-color: #DEA54B;\r\n                    color: white;\r\n                    padding: 5px;\r\n                    border-radius: 4px;\r\n                }\r\n\r\n                li a {\r\n                    text-decoration: none;\r\n                    color: white;\r\n                }\r\n\r\n                li a:hover {\r\n                    color: #1b4f48;\r\n                }\r\n\r\n                img {\r\n                    max-width: 100%;\r\n                    height: auto;\r\n                    border-radius: 4px;\r\n                    display: block;\r\n                    margin-bottom: 10px;\r\n                }\r\n\r\n                .search-container {\r\n                    display: flex;\r\n                    justify-content: center;\r\n                    margin: 20px 0;\r\n                }\r\n\r\n                .search-container input {\r\n                    width: 50%; \r\n                    padding: 10px;\r\n                    border-radius: 4px;\r\n                    border: 1px solid #ccc;\r\n                    font-size: 1.5em; \r\n                }\r\n\r\n                @media screen and (max-width: 600px) {\r\n                    .main-content, .filter-column {\r\n                        width: 100%;\r\n                    }\r\n                }\r\n            </style></head><body><div class=\"search-container\"><input type=\"text\" placeholder=\"Search for accessories...\" id=\"search\"></div><div class=\"container\"><div class=\"filter-column\"><h3>Filters</h3><label for=\"filter-category\">Category</label> <select id=\"filter-category\"><option value=\"all\">All</option> <option value=\"comfort\">comfort</option> <option value=\"tools\">tools</option> <option value=\"storage\">storage</option> <option value=\"protection\">protection</option> <option value=\"lighting\">lighting</option> <option value=\"safety\">safety</option> <option value=\"training\">training</option></select> <label for=\"filter-price\">Price Range</label> <input type=\"range\" id=\"filter-price\" min=\"0\" max=\"500\" step=\"10\"> <label for=\"filter-sort\">Sort By</label> <select id=\"filter-sort\"><option value=\"from-cheap-to-expensive\">from cheap to expensive</option> <option value=\"from-expensive-to-cheap\">from expensive to cheap</option> <option value=\"by-name\">by name</option> <option value=\"by-review\">by reviews</option></select> <button id=\"filter-button\">Confirm Filter</button></div><div class=\"main-content\"><ul class=\"accessory-list\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -46,7 +52,7 @@ func LoadAccessories(accessories []types.Accessory) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ul></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ul></div></div></body></html></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

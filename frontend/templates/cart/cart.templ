@@ -1,0 +1,39 @@
+package templates
+
+import (
+	"fmt"
+	templates "github.com/Megidy/e-commerce/frontend/templates/user"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ LoadCart(accessories []types.CartAccessoryResponse, bicycles []types.CartBicycleResponse, totalPrice float32) {
+	
+	@templates.Page(true)
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Cart</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+			if totalPrice>0 {
+				<div>
+					<ul>
+						for _,bicycle:=range bicycles {
+							@BicycleTile(&bicycle)
+						}
+						for _,accessory:=range accessories {
+							@AccessoryTile(&accessory)
+						}
+					</ul>
+					{ fmt.Sprintf("totalPrice:%f",totalPrice) }
+				</div>
+				<button hx-post="/orders/confirm/redirect">Make Order</button>
+			} else {
+				<p>cart is empty</p>
+			}
+		</body>
+	</html>
+}

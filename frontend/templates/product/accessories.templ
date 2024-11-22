@@ -1,26 +1,172 @@
 package templates
 
-import "github.com/Megidy/e-commerce/types"
-import "github.com/Megidy/e-commerce/frontend/templates/user"
+import (
+    templates "github.com/Megidy/e-commerce/frontend/templates/user"
+    "github.com/Megidy/e-commerce/types"
+)
 
 templ LoadAccessories(accessories []types.Accessory) {
+    <div class="color">
     @templates.Page(true)
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Accessories</title>
-			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
-		</head>
-		<body>
-			<div>
-                <ul>
-                    for _,acc := range accessories{
-                        @AccessoryTile(&acc)
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Accessories</title>
+            <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+            <style>
+                .color{
+                    background-color: #FFFFFF;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #FFF7E1;
+                }
+
+                .container {
+                    display: flex;
+                    padding: 20px;
+                }
+
+                .main-content {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    width: 75%;
+                    margin-right: 5%;
+                }
+
+                .filter-column {
+                    width: 15%;
+                    background-color: #DEA54B;
+                    padding: 10px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    font-size: 1.5em;
+                    position: relative;
+                }
+
+                .filter-column label,
+                .filter-column select,
+                .filter-column input {
+                    display: block;
+                    margin-bottom: 15px;
+                }
+
+                .filter-column {
+                    max-height: 600px; /* Фіксована довжина */
+                    overflow-y: auto; /* Додаємо скролінг, якщо вміст перевищує висоту */
+                }
+
+                .accessory-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    padding: 0;
+                    list-style: none;
+                    gap: 15px;
+                }
+
+                li {
+                    background-color: white;
+                    color: black;
+                    margin: 10px;
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                    width: 200px;
+                    transition: background-color 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    font-size: 1.5em; 
+                }
+
+                li .name,
+                li .price {
+                    background-color: #DEA54B;
+                    color: white;
+                    padding: 5px;
+                    border-radius: 4px;
+                }
+
+                li a {
+                    text-decoration: none;
+                    color: white;
+                }
+
+                li a:hover {
+                    color: #1b4f48;
+                }
+
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 4px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                .search-container {
+                    display: flex;
+                    justify-content: center;
+                    margin: 20px 0;
+                }
+
+                .search-container input {
+                    width: 50%; 
+                    padding: 10px;
+                    border-radius: 4px;
+                    border: 1px solid #ccc;
+                    font-size: 1.5em; 
+                }
+
+                @media screen and (max-width: 600px) {
+                    .main-content, .filter-column {
+                        width: 100%;
                     }
-                </ul>
+                }
+            </style>
+        </head>
+        <body>
+            <div class="search-container">
+                <input type="text" placeholder="Search for accessories..." id="search"/>
             </div>
-		</body>
-	</html>
+            <div class="container">
+                <div class="filter-column">
+                    <h3>Filters</h3>
+                    <label for="filter-category">Category</label>
+                    <select id="filter-category">
+                        <option value="all">All</option>
+                        <option value="comfort">comfort</option>
+                        <option value="tools">tools</option>
+                        <option value="storage">storage</option>
+                        <option value="protection">protection</option>
+                        <option value="lighting">lighting</option>
+                        <option value="safety">safety</option>
+                        <option value="training">training</option>
+                    </select>
+                    <label for="filter-price">Price Range</label>
+                    <input type="range" id="filter-price" min="0" max="500" step="10">
+                    <label for="filter-sort">Sort By</label>
+                    <select id="filter-sort">
+                        <option value="from-cheap-to-expensive">from cheap to expensive</option>
+                        <option value="from-expensive-to-cheap">from expensive to cheap</option>
+                        <option value="by-name">by name</option>
+                        <option value="by-review">by reviews</option>
+                    </select>
+                    <button id="filter-button">Confirm Filter</button>
+                </div>
+                <div class="main-content">
+                    <ul class="accessory-list">
+                        for _, acc := range accessories {
+                            @AccessoryTile(&acc)
+                        }
+                    </ul>
+                </div>
+            </div>
+        </body>
+    </html>
+    </div>
 }

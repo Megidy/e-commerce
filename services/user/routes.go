@@ -3,6 +3,7 @@ package user
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/Megidy/e-commerce/config"
 	templates "github.com/Megidy/e-commerce/frontend/templates/user"
@@ -23,12 +24,13 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 		userStore: userStore,
 	}
 }
-func (h *Handler) RegisterRoutes(router gin.IRouter) {
+func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler) {
+	router.GET("/", h.LoadSignUpTemplate)
 	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
 	router.POST("/login/enter", h.LogIn)
-	router.GET("/user", auth.NewHandler(h.userStore).WithJWT, h.UserAccount)
+	router.GET("/user", authHandler.WithJWT, h.UserAccount)
 
 }
 
@@ -39,13 +41,21 @@ func (h *Handler) SignUp(c *gin.Context) {
 	payload.LastName = h.templates.GetDataFromForm(c, "lastname")
 	payload.Email = h.templates.GetDataFromForm(c, "email")
 	payload.Password = h.templates.GetDataFromForm(c, "password")
-	log.Println(payload)
+
+	if !strings.Contains(payload.Email, "@") {
+		c.Writer.Header().Add("email", "!ok")
+		templates.Signup(true, "email has to contain @").Render(c.Request.Context(), c.Writer)
+		return
+	}
+
+	log.Println("users payload : ", payload)
 	ok, err := h.userStore.AlreadyExists(&types.User{Email: payload.Email})
 	if err != nil {
 		templates.Signup(true, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
 	}
 	if ok {
+		c.Writer.Header().Add("exists", "true")
 		templates.Signup(true, "user already exists").Render(c.Request.Context(), c.Writer)
 		return
 	}
@@ -68,14 +78,24 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
-	c.Writer.Header().Add("HX-Redirect", "/login")
+	config := config.InitConfig()
+	secret, err := auth.CreateJWT([]byte(config.Secret), user.ID)
+	if err != nil {
+		templates.Signup(true, err.Error()).Render(c.Request.Context(), c.Writer)
+		return
+	}
+
+	log.Println("cookie :", secret)
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Authorization", secret, 3600*24*10, "/", "", false, true)
+	c.Writer.Header().Add("HX-Redirect", "/products/accessories")
 }
 
 func (h *Handler) LoadSignUpTemplate(c *gin.Context) {
 	templates.Signup(false, "").Render(c.Request.Context(), c.Writer)
 }
 func (h *Handler) LoadLogInTemplate(c *gin.Context) {
-	templates.Login(false, "").Render(c.Request.Context(), c.Writer)
+	templates.Login(true, "You have to be authorized to purchase items!").Render(c.Request.Context(), c.Writer)
 }
 
 func (h *Handler) LogIn(c *gin.Context) {
@@ -84,7 +104,7 @@ func (h *Handler) LogIn(c *gin.Context) {
 	logInPayload.Email = h.templates.GetDataFromForm(c, "email")
 	logInPayload.Password = h.templates.GetDataFromForm(c, "password")
 
-	log.Println(logInPayload)
+	log.Println("login payload :", logInPayload)
 
 	ok, err := h.userStore.AlreadyExists(&types.User{Email: logInPayload.Email})
 	if err != nil {
@@ -92,18 +112,20 @@ func (h *Handler) LogIn(c *gin.Context) {
 		return
 	}
 	if !ok {
-		templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
+		c.Writer.Header().Add("hasEmail", "false")
+		templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 		return
 	} else if ok {
 		user, err := h.userStore.GetUserByEmail(logInPayload.Email)
 		if err != nil {
-			templates.Login(true, "User not found").Render(c.Request.Context(), c.Writer)
+			templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
 		ok := auth.ComparePassword(user.Password, logInPayload.Password)
 		if !ok {
-			templates.Login(true, "Invalid data").Render(c.Request.Context(), c.Writer)
+			c.Writer.Header().Add("correctPassword", "false")
+			templates.Login(true, "Invalid data sent").Render(c.Request.Context(), c.Writer)
 			return
 		}
 		config := config.InitConfig()
@@ -113,14 +135,19 @@ func (h *Handler) LogIn(c *gin.Context) {
 			return
 		}
 		c.Writer.Header().Add("HX-Redirect", "/products/accessories")
-		log.Println(secret)
+
+		log.Println("cookie :", secret)
 		c.SetSameSite(http.SameSiteLaxMode)
-		c.SetCookie("Authorization", secret, 3600*24*10, "", "", false, true)
+		c.SetCookie("Authorization", secret, 3600*24*10, "/", "", false, true)
 
 	}
 }
 func (h *Handler) UserAccount(c *gin.Context) {
-	u, _ := c.Get("user")
+	u, ok := c.Get("user")
+	if !ok {
+		log.Println("user not found")
+		return
+	}
 	user := u.(types.User)
 	log.Println(user)
 	templates.UserAccount(user).Render(c.Request.Context(), c.Writer)

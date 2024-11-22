@@ -32,9 +32,6 @@ type UserStore interface {
 }
 
 type Templates interface {
-	LoadResponse(c *gin.Context, statusCode int, file string, response map[string]any)
-	ExecuteTemplate(c *gin.Context, filePath string, data map[string]any) error
-	ExecuteSpecificTemplate(c *gin.Context, name, filePath string, data map[string]any) error
 	GetDataFromForm(c *gin.Context, key string) string
 }
 type ProductStore interface {
@@ -42,6 +39,26 @@ type ProductStore interface {
 	GetAllBicycles() ([]Bicycle, error)
 	GetBicycleById(id string) (Bicycle, error)
 	GetAccessoryById(id string) (Accessory, error)
+	GetAllProductsForCart(carts []Cart) ([]CartAccessoryResponse, []CartBicycleResponse, float32, error)
+	ChangeProductsQuantity(productID, action string, amount int) error
+}
+
+type CartStore interface {
+	GetCart(userID string) ([]Cart, error)
+	AddToCart(cart Cart) error
+	DeleteFromCart(userID, productID string) error
+	ProductInCart(userID, productID string) (bool, error)
+	ChangeCartsProductQuantity(userID, ProductID, action string, amount int) error
+}
+type OrderStore interface {
+	CreateOrder(order Order) error
+	GetOrders(userID string) ([]Order, error)
+	GetOrderById(userID, orderId string) (Order, error)
+	CreateOrdersProducts(order Order, cart Cart, totalPrice float32) error
+	GetOrdersProducts(userID, orderID string) ([]OrderProduct, error)
+	CancelOrder(orderID, userID string) error
+	AddOrdersDetails(orderDetails OrderDetails) error
+	GetOrderDetails(orderID, userID string) (OrderDetails, error)
 }
 type Accessory struct {
 	Id          string
@@ -49,6 +66,7 @@ type Accessory struct {
 	Description string
 	Quantity    int
 	Price       float32
+	Category    string
 	Image       string
 }
 
@@ -63,4 +81,61 @@ type Bicycle struct {
 	Quantity    int
 	Price       float32
 	Image       string
+	Color       string
+	Weight      float32
+	ReleaseYear int
+	BrakeSystem string
+	Gears       int
+	Brand       string
+	Suspension  string
+	WheelSize   int
+	FrameSize   string
+}
+
+type Cart struct {
+	UserId     string
+	Product_id string
+	Quantity   int
+	Created    string
+}
+
+type Order struct {
+	Order_id   string
+	User_id    string
+	Status     string
+	Created    string
+	TotalPrice float32
+}
+
+type OrderProduct struct {
+	User_id    string
+	Order_id   string
+	Product_id string
+	Quantity   int
+	TotalPrice float32
+}
+
+type OrderDetails struct {
+	UserId      string
+	Order_Id    string
+	FirstName   string
+	LastName    string
+	Email       string
+	PhoneNumber string
+	Country     string
+	City        string
+	Street      string
+	House       string
+}
+
+type CartBicycleResponse struct {
+	Bicycle        *Bicycle
+	Quantity       int
+	PriceOfBicycle float32
+}
+
+type CartAccessoryResponse struct {
+	Accessory        *Accessory
+	Quantity         int
+	PriceOfAccessory float32
 }

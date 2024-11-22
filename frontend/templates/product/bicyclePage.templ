@@ -6,29 +6,69 @@ import (
 	"github.com/Megidy/e-commerce/types"
 )
 
-templ LoadSingleBicycle(bicycle types.Bicycle) {
-	@templates.Page(true)
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>Accessory</title>
-			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
-		</head>
-		<body>
-			<div>
-				<img src={ bicycle.Image }/>
-				<p>Name : { bicycle.Name }</p>
-				<p>Model : {bicycle.Model}</p>
-				<p>Description : { bicycle.Description }</p>
-				<p>Type : {bicycle.Type}</p>
-				<p>Size : {bicycle.Size}</p>
-				<p>Material {bicycle.Material}</p>
-				<p>Quantity : { fmt.Sprintf("%d",bicycle.Quantity) }</p>
-				<p>Price : { fmt.Sprintf("%f",bicycle.Price) }</p>
-			</div>
-		</body>
-	</html>
+templ LoadSingleBicycle(bicycle types.Bicycle, isAddingToCart bool, message string) {
+	<div class="page">
+		@templates.Page(true)
+		<!DOCTYPE html>
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+				<title>Accessory</title>
+				<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+			</head>
+			<body>
+				<div>
+					<img src={ bicycle.Image }/>
+					<p>Name : { bicycle.Name }</p>
+					<p>Model : { bicycle.Model }</p>
+					<p>Description : { bicycle.Description }</p>
+					<p>Type : { bicycle.Type }</p>
+					<p>Size : { bicycle.Size }</p>
+					<p>Material { bicycle.Material }</p>
+					<p>Quantity : { fmt.Sprintf("%d",bicycle.Quantity) }</p>
+					<p>Price : { fmt.Sprintf("%f",bicycle.Price) }</p>
+					<p>Brand : {bicycle.Brand}</p>
+					if isAddingToCart {
+						<form
+							hx-post={ fmt.Sprintf("/products/addtocart/%s", bicycle.Id) }
+							hx-swap="outerHTML"
+							hx-target=".page"
+						>
+							<label>Quantity</label>
+							<input
+								type="number"
+								name="quantity"
+								min="1"
+								step="1"
+								required
+							/>
+							<button type="submit">
+								Add 
+							</button>
+							<button
+								type="button"
+								hx-get={ fmt.Sprintf("/products/bicycle/%s?isAddingCar=false", bicycle.Id) }
+								hx-swap="outerHTML"
+								hx-target=".page"
+							>
+								Cancel
+							</button>
+						</form>
+					} else {
+						<button
+							hx-get={ fmt.Sprintf("/products/bicycle/%s?isAddingCar=true", bicycle.Id) }
+							hx-swap="outerHTML"
+							hx-target=".page"
+						>
+							Add to cart
+						</button>
+					}
+				</div>
+				<div id="message">
+					<p><h1>{ message }</h1></p>
+				</div>
+			</body>
+		</html>
+	</div>
 }
-    

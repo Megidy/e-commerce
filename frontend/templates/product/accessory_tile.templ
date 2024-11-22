@@ -1,26 +1,70 @@
 package templates
 
 import (
-	"fmt"
-	"github.com/Megidy/e-commerce/types"
+    "fmt"
+    "github.com/Megidy/e-commerce/types"
 )
 
 templ AccessoryTile(accessory *types.Accessory) {
-	<li
-		id={ fmt.Sprintf("accessory-%s", accessory.Id) }
-	>
-        <a href={templ.URL(fmt.Sprintf("/products/accessories/%s",accessory.Id))}>
-        <span>
-			<img
-				src={ accessory.Image}
-			/>
-			{ accessory.Name }
-			<br/>
-			Price : { fmt.Sprintf("%f",accessory.Price) }
-		</span>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        li {
+            background-color: white;
+            color: black;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            width: 200px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid #DEA54B; 
+        }
+
+        li a {
+            text-decoration: none;
+            color: black;
+        }
+
+        li a:hover {
+            color: #1b4f48;
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 4px;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .name, .price {
+            background-color: #DEA54B;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 600px) {
+            li {
+                width: 100%;
+            }
+        }
+    </style>
+    <li id={ fmt.Sprintf("accessory-%s", accessory.Id) }>
+        <a href={ templ.URL(fmt.Sprintf("/products/accessory/%s", accessory.Id)) }>
+            <img src={ accessory.Image } alt={ accessory.Name }/>
+            <div class="name">{ accessory.Name }</div>
+            <div class="price">Price: { fmt.Sprintf("%.2f",accessory.Price) } $</div>
         </a>
-        <button>
-            Add to cart
-        </button>
-	</li>
+    </li>
 }
