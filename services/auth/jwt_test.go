@@ -56,7 +56,7 @@ func TestCreateJWT(t *testing.T) {
 func TestJWT(t *testing.T) {
 	userStore := &mockUserStore{}
 	t.Run("Should Pass if user is authorized", func(t *testing.T) {
-		JWTauth := NewHandler(userStore)
+		JWTauth := NewJWT(userStore)
 		var u types.User = types.User{
 			ID:       "123 plz pass",
 			Name:     "testNameuserauthoorization",

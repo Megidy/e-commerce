@@ -39,7 +39,7 @@ func (s *APIServer) Run() error {
 	router.RedirectFixedPath = true
 	router.RedirectTrailingSlash = true
 
-	authHandler := auth.NewHandler(userStore)
+	authHandler := auth.NewJWT(userStore)
 
 	userHandler := user.NewHandler(NewTemplateHandler, userStore)
 	userHandler.RegisterRoutes(router, authHandler)

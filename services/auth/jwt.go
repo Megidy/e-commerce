@@ -15,7 +15,7 @@ type Handler struct {
 	UserStore types.UserStore
 }
 
-func NewHandler(userStore types.UserStore) *Handler {
+func NewJWT(userStore types.UserStore) *Handler {
 	return &Handler{
 		UserStore: userStore,
 	}
