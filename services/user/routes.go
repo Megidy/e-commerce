@@ -24,14 +24,15 @@ func NewHandler(templates types.Templates, userStore types.UserStore) *Handler {
 		userStore: userStore,
 	}
 }
-func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler) {
+func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler, managerHandler *auth.Manager) {
 	router.GET("/", h.LoadSignUpTemplate)
 	router.GET("/signup", h.LoadSignUpTemplate)
 	router.POST("/signup/create", h.SignUp)
 	router.GET("/login", h.LoadLogInTemplate)
 	router.POST("/login/enter", h.LogIn)
 	router.GET("/user", authHandler.WithJWT, h.UserAccount)
-
+	router.POST("/user/redirecttomanaging", authHandler.WithJWT, managerHandler.WithManagerRole, h.redirectToManaging)
+	router.GET("/user/manager", authHandler.WithJWT, managerHandler.WithManagerRole, h.ManagerPage)
 }
 
 func (h *Handler) SignUp(c *gin.Context) {
@@ -151,4 +152,12 @@ func (h *Handler) UserAccount(c *gin.Context) {
 	user := u.(types.User)
 	log.Println(user)
 	templates.UserAccount(user).Render(c.Request.Context(), c.Writer)
+}
+
+func (h *Handler) redirectToManaging(c *gin.Context) {
+	redirectURL := "/user/manager"
+	c.Writer.Header().Add("HX-Redirect", redirectURL)
+}
+func (h *Handler) ManagerPage(c *gin.Context) {
+	templates.LoadManagerPage().Render(c.Request.Context(), c.Writer)
 }
