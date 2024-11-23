@@ -21,6 +21,9 @@ templ UserAccount(user types.User) {
 				<h1>{ user.Role }</h1>
 				<h1>{ user.Created}</h1>
 			</div>
+			if user.Role=="manager"{
+				<button hx-post="/user/redirecttomanaging"> Store managing </button>
+			}
 		</body>
 	</html>
 }
