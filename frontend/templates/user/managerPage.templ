@@ -1,0 +1,37 @@
+package templates
+
+templ LoadManagerPage() {
+	@Page(true)
+	<html>
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>LogIn</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+        <body>
+            <form hx-post="/products/action/redirect">
+                <div class="form-group">
+                        <label for="product">product Id </label><br>
+                        <input type="text" id="product" name="product" required/><br>
+                        <input type="radio" id="delete" name="action" value="delete" required>
+                        <label for="delete">Delete Product</label><br>
+                        <input type="radio" id="modify" name="action" value="modify" required >
+                        <label for="modify">modify Product</label><br>
+                    </div>
+                 <button> Submit action </button>
+
+            </form>
+             <form hx-post="/products/action/redirect">
+                <div class="form-group">
+                        <input type="radio" id="AddAccessory" name="addproduct" value="AddAccessory" required>
+                        <label for="AddAccessory">Add Accessory</label><br>
+                        <input type="radio" id="AddBicycle" name="addproduct" value="AddBicycle" required >
+                        <label for="AddBicycle">Add Bicycle</label><br>
+                    </div>
+                 <button> Submit action </button>
+
+            </form>
+        </body>
+	</html>
+}
