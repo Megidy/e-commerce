@@ -45,9 +45,9 @@ func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler, 
 	router.DELETE("/products/action/delete/:productID/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.DeleteProduct)
 	//creating products
 	router.GET("/products/accessory/action/add", authHandler.WithJWT, managerHandler.WithManagerRole, h.LoadAddAccessoryPage)
-	router.GET("/products/bicycle/action/add")
+	router.GET("/products/bicycle/action/add", authHandler.WithJWT, managerHandler.WithManagerRole, h.LoadAddbicyclePage)
 	router.POST("/products/accessory/action/add/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.ConfirmAddingAccessory)
-	router.POST("/products/bicycle/action/add/confirm")
+	router.POST("/products/bicycle/action/add/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.ConfirmAddingBicycle)
 }
 func (h *Handler) GetAllAccessories(c *gin.Context) {
 	accessories, err := h.productStore.GetAllAccessories()
@@ -181,4 +181,102 @@ func (h *Handler) ConfirmAddingAccessory(c *gin.Context) {
 	}
 	c.Writer.Header().Add("HX-Redirect", "/user/manager")
 
+}
+func (h *Handler) LoadAddbicyclePage(c *gin.Context) {
+	templates.LoadAddBicyclePage("").Render(c.Request.Context(), c.Writer)
+}
+func (h *Handler) ConfirmAddingBicycle(c *gin.Context) {
+	var Bicycle types.Bicycle
+	id := h.templates.GetDataFromForm(c, "id")
+	ok, err := h.productStore.BicycleAlreadyExists(id)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		return
+	}
+	if ok {
+		log.Println("accessory already exists")
+		templates.LoadAddBicyclePage("bicycle with this id already exists").Render(c.Request.Context(), c.Writer)
+		return
+	}
+	name := h.templates.GetDataFromForm(c, "name")
+	model := h.templates.GetDataFromForm(c, "model")
+	description := h.templates.GetDataFromForm(c, "description")
+	typ := h.templates.GetDataFromForm(c, "type")
+	size := h.templates.GetDataFromForm(c, "size")
+	material := h.templates.GetDataFromForm(c, "material")
+	q := h.templates.GetDataFromForm(c, "quantity")
+	p := h.templates.GetDataFromForm(c, "price")
+	image := h.templates.GetDataFromForm(c, "image")
+	color := h.templates.GetDataFromForm(c, "color")
+	w := h.templates.GetDataFromForm(c, "weight")
+	r := h.templates.GetDataFromForm(c, "releaseyear")
+	brakesystem := h.templates.GetDataFromForm(c, "brakesystem")
+	g := h.templates.GetDataFromForm(c, "gears")
+	brand := h.templates.GetDataFromForm(c, "brand")
+	suspension := h.templates.GetDataFromForm(c, "suspension")
+	ws := h.templates.GetDataFromForm(c, "wheelsize")
+	framesize := h.templates.GetDataFromForm(c, "framesize")
+	quantity, err := strconv.Atoi(q)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	price, err := strconv.ParseFloat(p, 32)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	weight, err := strconv.Atoi(w)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	releaseyear, err := strconv.Atoi(r)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	gears, err := strconv.Atoi(g)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	wheelsize, err := strconv.Atoi(ws)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	Bicycle = types.Bicycle{
+		Id:          id,
+		Name:        name,
+		Model:       model,
+		Description: description,
+		Type:        typ,
+		Size:        size,
+		Material:    material,
+		Quantity:    quantity,
+		Price:       float32(price),
+		Image:       image,
+		Color:       color,
+		Weight:      float32(weight),
+		ReleaseYear: releaseyear,
+		BrakeSystem: brakesystem,
+		Gears:       gears,
+		Brand:       brand,
+		Suspension:  suspension,
+		WheelSize:   wheelsize,
+		FrameSize:   framesize,
+	}
+	err = h.productStore.AddBicycle(Bicycle)
+	if err != nil {
+		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
+		log.Println(err)
+		return
+	}
+	c.Writer.Header().Add("HX-Redirect", "/user/manager")
 }
