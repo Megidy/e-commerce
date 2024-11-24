@@ -30,3 +30,6 @@ func SendResponse(c *gin.Context, message string, statusCode int) {
 func IsAccessory(id string) bool {
 	return strings.HasPrefix(id, "a")
 }
+func IsBicycle(id string) bool {
+	return strings.HasPrefix(id, "b")
+}
