@@ -179,3 +179,15 @@ func (s *Store) ChangeProductsQuantity(productID, action string, amount int) err
 	}
 	return nil
 }
+func (s *Store) DeleteProduct(productID string) error {
+	var err error
+	if utils.IsAccessory(productID) {
+		_, err = s.db.Exec("delete from accessories where id=?", productID)
+	} else {
+		_, err = s.db.Exec("delete from bicycles where id=?", productID)
+	}
+	if err != nil {
+		return err
+	}
+	return nil
+}
