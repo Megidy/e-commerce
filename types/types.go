@@ -41,6 +41,11 @@ type ProductStore interface {
 	GetAccessoryById(id string) (Accessory, error)
 	GetAllProductsForCart(carts []Cart) ([]CartAccessoryResponse, []CartBicycleResponse, float32, error)
 	ChangeProductsQuantity(productID, action string, amount int) error
+	DeleteProduct(productID string) error
+	AddAccessory(accessory Accessory) error
+	AddBicycle(bicycle Bicycle) error
+	AccessoryAlreadyExists(id string) (bool, error)
+	BicycleAlreadyExists(id string) (bool, error)
 }
 
 type CartStore interface {
