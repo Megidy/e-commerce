@@ -191,3 +191,53 @@ func (s *Store) DeleteProduct(productID string) error {
 	}
 	return nil
 }
+func (s *Store) AddAccessory(accessory types.Accessory) error {
+	_, err := s.db.Exec("insert into accessories values(?,?,?,?,?,?,?)", accessory.Id, accessory.Name, accessory.Description, accessory.Quantity, accessory.Price, accessory.Category, accessory.Image)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (s *Store) AddBicycle(bicycle types.Bicycle) error {
+	_, err := s.db.Exec("insert into bicycles values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", bicycle.Id, bicycle.Name, bicycle.Model, bicycle.Description, bicycle.Type, bicycle.Size, bicycle.Material, bicycle.Quantity, bicycle.Price, bicycle.Image, bicycle.Color, bicycle.Weight, bicycle.ReleaseYear, bicycle.BrakeSystem, bicycle.Gears, bicycle.Brand, bicycle.Suspension, bicycle.WheelSize, bicycle.FrameSize)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (s *Store) AccessoryAlreadyExists(id string) (bool, error) {
+	var accID string
+	row, err := s.db.Query("select id from accessories where id=?", id)
+	if err != nil {
+		return true, err
+	}
+	for row.Next() {
+
+		err = row.Scan(&accID)
+		if err != nil {
+			return true, err
+		}
+	}
+	if accID != "" || accID == id {
+		return true, nil
+	}
+	return false, nil
+}
+func (s *Store) BicycleAlreadyExists(id string) (bool, error) {
+	var bicID string
+	row, err := s.db.Query("select id from bicycles where id=?", id)
+	if err != nil {
+		return true, err
+	}
+	for row.Next() {
+
+		err = row.Scan(&bicID)
+		if err != nil {
+			return true, err
+		}
+	}
+	if bicID != "" || bicID == id {
+		return true, nil
+	}
+	return false, nil
+}
