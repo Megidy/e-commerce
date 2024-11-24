@@ -135,6 +135,10 @@ func (h *Handler) LoadAddAccessoryPage(c *gin.Context) {
 func (h *Handler) ConfirmAddingAccessory(c *gin.Context) {
 	var Accessory types.Accessory
 	id := h.templates.GetDataFromForm(c, "id")
+	if !utils.IsAccessory(id) {
+		templates.LoadAddAccessoryPage("id has to start with prefix 'a' ").Render(c.Request.Context(), c.Writer)
+		return
+	}
 	ok, err := h.productStore.AccessoryAlreadyExists(id)
 	if err != nil {
 		templates.LoadAddAccessoryPage(err.Error()).Render(c.Request.Context(), c.Writer)
@@ -188,6 +192,10 @@ func (h *Handler) LoadAddbicyclePage(c *gin.Context) {
 func (h *Handler) ConfirmAddingBicycle(c *gin.Context) {
 	var Bicycle types.Bicycle
 	id := h.templates.GetDataFromForm(c, "id")
+	if !utils.IsBicycle(id) {
+		templates.LoadAddBicyclePage("id has to start with prefix 'b'").Render(c.Request.Context(), c.Writer)
+		return
+	}
 	ok, err := h.productStore.BicycleAlreadyExists(id)
 	if err != nil {
 		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
