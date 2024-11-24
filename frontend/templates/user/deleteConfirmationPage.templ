@@ -1,0 +1,9 @@
+package templates
+
+import "fmt"
+
+templ LoadDeleteConfirmationPage(productID string ) {
+	@Page(true)
+
+    <button hx-delete={fmt.Sprintf("/products/action/delete/%s/confirm",productID)}>Confirm deletion</button>
+}
