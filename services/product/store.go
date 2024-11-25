@@ -2,6 +2,7 @@ package product
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/Megidy/e-commerce/types"
@@ -240,4 +241,23 @@ func (s *Store) BicycleAlreadyExists(id string) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (s *Store) UpdateAccessory(column string, value any, accessoryID string) error {
+	log.Println("Entered function , column is : ", column, " , value is : ", value, "id of accessory : ", accessoryID)
+	query := fmt.Sprintf("update accessories set %s = ? where id=? ", column)
+	_, err := s.db.Exec(query, value, accessoryID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (s *Store) UpdateBicycle(column string, value any, accessoryID string) error {
+	log.Println("Entered function , column is : ", column, " , value is : ", value, "id of bicycle : ", accessoryID)
+	query := fmt.Sprintf("update bicycles set %s = ? where id=? ", column)
+	_, err := s.db.Exec(query, value, accessoryID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
