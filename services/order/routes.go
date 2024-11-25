@@ -257,6 +257,12 @@ func (h *Handler) ConfirmOrder(c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 			return
+
+		}
+		err = h.productStore.ChangeProductsQuantity(ca.Product_id, "desc", ca.Quantity)
+		if err != nil {
+			log.Println(err)
+			return
 		}
 	}
 
