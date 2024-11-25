@@ -1,0 +1,47 @@
+package templates
+
+import "github.com/Megidy/e-commerce/frontend/templates/user"
+import "fmt"
+
+templ LoadModifyAccessoryPage(id string ) {
+
+    @templates.Page(true)
+	<html>
+    <head>
+        <meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Modify Accessory</title>
+		<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    </head>
+    <body>
+        <form hx-post={fmt.Sprintf("/products/accessory/%s/modify/confirm",id)}>
+                    <div class="form-group">
+                        <label for="name">name</label>
+                        <input type="text" id="name" name="name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">description</label>
+                        <input type="text" id="description" name="description"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">quantity</label>
+                        <input type="text" id="quantity" name="quantity"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">price</label>
+                        <input type="text" id="price" name="price"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">category</label>
+                        <input type="text" id="category" name="category"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">image</label>
+                        <input type="text" id="image" name="image" />
+                    </div>
+                    <button type="submit" class="btn">Modify Accessory</button>
+                    
+                </form>
+                </body>
+    </html>
+}
