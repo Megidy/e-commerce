@@ -34,9 +34,9 @@ func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler, 
 	router.GET("/products/bicycle/:bicycleID", h.GetBicycleById)
 	router.GET("/products/accessory/:accessoryID", h.GetAccessoryById)
 	//modifying products
-	router.GET("/products/accessory/:accessoryID/modify")
-	router.GET("/products/bicycle/:bicycleID/modify/")
-	router.POST("/products/accessory/:accessoryID/modify/confirm")
+	router.GET("/products/accessory/:accessoryID/modify", authHandler.WithJWT, managerHandler.WithManagerRole, h.LoadModifyAccessoryPage)
+	router.GET("/products/bicycle/:bicycleID/modify")
+	router.POST("/products/accessory/:accessoryID/modify/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.ModifyAccessoryPageConfirm)
 	router.POST("/products/bicycle/:bicycleID/modify/confirm")
 	//redirecting products
 	router.POST("/products/action/redirect", authHandler.WithJWT, managerHandler.WithManagerRole, h.ActionRedirector)
@@ -91,20 +91,18 @@ func (h *Handler) ActionRedirector(c *gin.Context) {
 	product := h.templates.GetDataFromForm(c, "product")
 	action := h.templates.GetDataFromForm(c, "action")
 	addproduct := h.templates.GetDataFromForm(c, "addproduct")
-	go func() {
-		switch action {
-		case "modify":
-			if utils.IsAccessory(product) {
-				c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/accessory/%s/modify", product))
-			} else {
-				c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/bicycle/%s/modify", product))
-			}
-
-		case "delete":
-			c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/action/delete/%s", product))
+	switch action {
+	case "modify":
+		if utils.IsAccessory(product) {
+			c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/accessory/%s/modify", product))
+		} else {
+			c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/bicycle/%s/modify", product))
 		}
-		log.Println("product: ", product, " , action : ", action, ", addProduct : ", addproduct)
-	}()
+
+	case "delete":
+		c.Writer.Header().Add("HX-Redirect", fmt.Sprintf("/products/action/delete/%s", product))
+	}
+	log.Println("product: ", product, " , action : ", action, ", addProduct : ", addproduct)
 	switch addproduct {
 	case "AddAccessory":
 		c.Writer.Header().Add("HX-Redirect", "/products/accessory/action/add")
@@ -285,6 +283,75 @@ func (h *Handler) ConfirmAddingBicycle(c *gin.Context) {
 		templates.LoadAddBicyclePage(err.Error()).Render(c.Request.Context(), c.Writer)
 		log.Println(err)
 		return
+	}
+	c.Writer.Header().Add("HX-Redirect", "/user/manager")
+}
+
+func (h *Handler) LoadModifyAccessoryPage(c *gin.Context) {
+	id := c.Param("accessoryID")
+	templates.LoadModifyAccessoryPage(id).Render(c.Request.Context(), c.Writer)
+}
+func (h *Handler) ModifyAccessoryPageConfirm(c *gin.Context) {
+
+	accessoryID := c.Param("accessoryID")
+	name := h.templates.GetDataFromForm(c, "name")
+	if name != "" {
+		err := h.productStore.UpdateAccessory("name", name, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	description := h.templates.GetDataFromForm(c, "description")
+	if description != "" {
+		err := h.productStore.UpdateAccessory("description", description, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	q := h.templates.GetDataFromForm(c, "quantity")
+	if q != "" {
+		quantity, err := strconv.Atoi(q)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = h.productStore.UpdateAccessory("quantity", quantity, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	p := h.templates.GetDataFromForm(c, "price")
+	if p != "" {
+		p, err := strconv.ParseFloat(p, 32)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		price := float32(p)
+		err = h.productStore.UpdateAccessory("price", price, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	category := h.templates.GetDataFromForm(c, "category")
+	if category != "" {
+		err := h.productStore.UpdateAccessory("category", category, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	image := h.templates.GetDataFromForm(c, "image")
+	if image != "" {
+		err := h.productStore.UpdateAccessory("image", image, accessoryID)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 	c.Writer.Header().Add("HX-Redirect", "/user/manager")
 }
