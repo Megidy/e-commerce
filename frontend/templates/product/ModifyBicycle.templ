@@ -1,0 +1,97 @@
+package templates
+
+import "fmt"
+import "github.com/Megidy/e-commerce/frontend/templates/user"
+
+templ LoadModifyBicyclePage(id string) {
+    @templates.Page(true)
+	<html>
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Modify Bicycle</title>
+			<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+		</head>
+		<body>
+			<form hx-post={fmt.Sprintf("/products/bicycle/%s/modify/confirm",id)}>
+				<div class="form-group">
+					<label for="id">id</label>
+					<input type="text" id="id" name="id"/>
+				</div>
+				<div class="form-group">
+					<label for="name">name</label>
+					<input type="text" id="name" name="name"/>
+				</div>
+				<div class="form-group">
+					<label for="model">model</label>
+					<input type="text" id="model" name="model" />
+				</div>
+				<div class="form-group">
+					<label for="description">description</label>
+					<input type="text" id="description" name="description" />
+				</div>
+				<div class="form-group">
+					<label for="type">type</label>
+					<input type="text" id="type" name="type" />
+				</div>
+				<div class="form-group">
+					<label for="size">size</label>
+					<input type="text" id="size" name="size" />
+				</div>
+				<div class="form-group">
+					<label for="material">material</label>
+					<input type="text" id="material" name="material"/>
+				</div>
+				<div class="form-group">
+					<label for="quantity">quantity</label>
+					<input type="text" id="quantity" name="quantity"/>
+				</div>
+				<div class="form-group">
+					<label for="price">price</label>
+					<input type="text" id="price" name="price"/>
+				</div>
+				<div class="form-group">
+					<label for="image">image</label>
+					<input type="text" id="image" name="image"/>
+				</div>
+				<div class="form-group">
+					<label for="color">color</label>
+					<input type="text" id="color" name="color"/>
+				</div>
+				<div class="form-group">
+					<label for="weight">weight</label>
+					<input type="text" id="weight" name="weight"/>
+				</div>
+				<div class="form-group">
+					<label for="releaseyear">release year</label>
+					<input type="text" id="releaseyear" name="releaseyear" />
+				</div>
+				<div class="form-group">
+					<label for="brakesystem">brake system</label>
+					<input type="text" id="brakesystem" name="brakesystem" />
+				</div>
+				<div class="form-group">
+					<label for="gears">gears</label>
+					<input type="text" id="gears" name="gears" />
+				</div>
+				<div class="form-group">
+					<label for="brand">brand</label>
+					<input type="text" id="brand" name="brand" />
+				</div>
+				<div class="form-group">
+					<label for="suspension">suspension</label>
+					<input type="text" id="suspension" name="suspension" />
+				</div>
+				<div class="form-group">
+					<label for="wheelsize">wheel size</label>
+					<input type="text" id="wheelsize" name="wheelsize" />
+				</div>
+				<div class="form-group">
+					<label for="framesize">frame size </label>
+					<input type="text" id="framesize" name="framesize" />
+				</div>
+				<button type="submit" class="btn">Modify Accessory</button>
+			</form>
+		</body>
+	</html>
+}
