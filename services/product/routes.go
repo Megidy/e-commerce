@@ -35,9 +35,9 @@ func (h *Handler) RegisterRoutes(router gin.IRouter, authHandler *auth.Handler, 
 	router.GET("/products/accessory/:accessoryID", h.GetAccessoryById)
 	//modifying products
 	router.GET("/products/accessory/:accessoryID/modify", authHandler.WithJWT, managerHandler.WithManagerRole, h.LoadModifyAccessoryPage)
-	router.GET("/products/bicycle/:bicycleID/modify")
+	router.GET("/products/bicycle/:bicycleID/modify", authHandler.WithJWT, managerHandler.WithManagerRole, h.LoadModifyBicyclePage)
 	router.POST("/products/accessory/:accessoryID/modify/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.ModifyAccessoryPageConfirm)
-	router.POST("/products/bicycle/:bicycleID/modify/confirm")
+	router.POST("/products/bicycle/:bicycleID/modify/confirm", authHandler.WithJWT, managerHandler.WithManagerRole, h.ModifyBicyclePageConfirm)
 	//redirecting products
 	router.POST("/products/action/redirect", authHandler.WithJWT, managerHandler.WithManagerRole, h.ActionRedirector)
 	//deleting products
@@ -354,4 +354,192 @@ func (h *Handler) ModifyAccessoryPageConfirm(c *gin.Context) {
 		}
 	}
 	c.Writer.Header().Add("HX-Redirect", "/user/manager")
+}
+
+func (h *Handler) LoadModifyBicyclePage(c *gin.Context) {
+	id := c.Param("bicycleID")
+	templates.LoadModifyBicyclePage(id).Render(c.Request.Context(), c.Writer)
+}
+func (h *Handler) ModifyBicyclePageConfirm(c *gin.Context) {
+
+	id := c.Param("bicycleID")
+
+	name := h.templates.GetDataFromForm(c, "name")
+	if name != "" {
+		err := h.productStore.UpdateBicycle("name", name, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	model := h.templates.GetDataFromForm(c, "model")
+	if model != "" {
+		err := h.productStore.UpdateBicycle("model", model, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	description := h.templates.GetDataFromForm(c, "description")
+	if description != "" {
+		err := h.productStore.UpdateBicycle("description", description, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	typ := h.templates.GetDataFromForm(c, "type")
+	if typ != "" {
+		err := h.productStore.UpdateBicycle("type", typ, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	size := h.templates.GetDataFromForm(c, "size")
+	if size != "" {
+		err := h.productStore.UpdateBicycle("size", size, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	material := h.templates.GetDataFromForm(c, "material")
+	if material != "" {
+		err := h.productStore.UpdateBicycle("material", material, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	q := h.templates.GetDataFromForm(c, "quantity")
+	if q != "" {
+		quantity, err := strconv.Atoi(q)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = h.productStore.UpdateBicycle("quantity", quantity, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	p := h.templates.GetDataFromForm(c, "price")
+	if p != "" {
+		p, err := strconv.ParseFloat(p, 32)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		price := float32(p)
+		err = h.productStore.UpdateBicycle("price", price, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	image := h.templates.GetDataFromForm(c, "image")
+	if image != "" {
+		err := h.productStore.UpdateBicycle("image", image, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	color := h.templates.GetDataFromForm(c, "color")
+	if color != "" {
+		err := h.productStore.UpdateBicycle("color", color, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	w := h.templates.GetDataFromForm(c, "weight")
+	if w != "" {
+		w, err := strconv.ParseFloat(w, 32)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		weight := float32(w)
+		err = h.productStore.UpdateBicycle("weight", weight, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	r := h.templates.GetDataFromForm(c, "releaseyear")
+	if r != "" {
+		releaseyear, err := strconv.Atoi(r)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = h.productStore.UpdateBicycle("releaseyear", releaseyear, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	brakesystem := h.templates.GetDataFromForm(c, "brakesystem")
+	if brakesystem != "" {
+		err := h.productStore.UpdateBicycle("brakesystem", brakesystem, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	g := h.templates.GetDataFromForm(c, "gears")
+	if g != "" {
+		gears, err := strconv.Atoi(g)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = h.productStore.UpdateBicycle("gears", gears, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	brand := h.templates.GetDataFromForm(c, "brand")
+	if brand != "" {
+		err := h.productStore.UpdateBicycle("brand", brand, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	suspension := h.templates.GetDataFromForm(c, "suspension")
+	if suspension != "" {
+		err := h.productStore.UpdateBicycle("suspension", suspension, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	ws := h.templates.GetDataFromForm(c, "wheelsize")
+	if ws != "" {
+		wheelSize, err := strconv.Atoi(ws)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = h.productStore.UpdateBicycle("wheelsize", wheelSize, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	framesize := h.templates.GetDataFromForm(c, "framesize")
+	if framesize != "" {
+		err := h.productStore.UpdateBicycle("framesize", framesize, id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+	c.Writer.Header().Add("HX-Redirect", "/user/manager")
+
 }
