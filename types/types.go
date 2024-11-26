@@ -46,6 +46,8 @@ type ProductStore interface {
 	AddBicycle(bicycle Bicycle) error
 	AccessoryAlreadyExists(id string) (bool, error)
 	BicycleAlreadyExists(id string) (bool, error)
+	UpdateAccessory(column string, value any, accessoryID string) error
+	UpdateBicycle(column string, value any, accessoryID string) error
 }
 
 type CartStore interface {
