@@ -1,0 +1,26 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/Megidy/e-commerce/types"
+)
+
+templ LoadQuestionPage(questions []types.Question) {
+	<html>
+    <div>
+		<ul>
+			for _,question :=range questions {
+                @QuestionTile(&question)
+			}   
+		</ul>
+        </div>
+	</html>
+}
+
+templ QuestionTile(question *types.Question) {
+	<a href={ templ.SafeURL(fmt.Sprintf("/questions/%s", question.Id)) }>
+	<li>
+		{ question.Title }
+	</li>
+    </a>
+}
