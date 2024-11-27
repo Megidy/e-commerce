@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
+	"github.com/Megidy/e-commerce/frontend/templates/user"
 	"github.com/Megidy/e-commerce/types"
 )
 
@@ -34,7 +35,11 @@ func LoadQuestionPage(questions []types.Question) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><div><ul>")
+		templ_7745c5c3_Err = templates.Page(true).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><div><a href=\"/questions/create\">Create Page</a></div><div><ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -89,7 +94,7 @@ func QuestionTile(question *types.Question) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(question.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/information/QuestionsPage.templ`, Line: 23, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `frontend/templates/information/QuestionsPage.templ`, Line: 26, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

@@ -3,10 +3,13 @@ package templates
 import (
 	"fmt"
 	"github.com/Megidy/e-commerce/types"
+	"github.com/Megidy/e-commerce/frontend/templates/user"
 )
 
 templ LoadQuestionPage(questions []types.Question) {
+	@templates.Page(true)
 	<html>
+	<div><a href="/questions/create">Create Page</a></div>
     <div>
 		<ul>
 			for _,question :=range questions {
