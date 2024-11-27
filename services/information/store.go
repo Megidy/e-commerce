@@ -63,7 +63,7 @@ func (s *Store) GetSingleQuestion(questionID string) (types.Question, error) {
 }
 func (s *Store) GetAllResponds(questionID string) ([]types.Respond, error) {
 	var responds []types.Respond
-	rows, err := s.db.Query("select * from responds")
+	rows, err := s.db.Query("select * from responds where question_id=?", questionID)
 	if err != nil {
 		return nil, err
 	}
