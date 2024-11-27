@@ -1,0 +1,49 @@
+package templates
+
+import "github.com/Megidy/e-commerce/types"
+import "fmt"
+import "github.com/Megidy/e-commerce/frontend/templates/user"
+
+templ LoadSingleQuestion(question types.Question, responds []types.Respond, role string) {
+	@templates.Page(true)
+	<html>
+	<header>
+		<meta charset="UTF-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+				<title>Accessory</title>
+				<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+	</header>
+	<body>
+		<div>
+			<p>{ question.UserID }</p>
+			<p>{ question.Title }</p>
+			<p>{ question.Body }</p>
+		</div>
+		<div>
+			<ul>
+				for _,respond:=range responds{
+					@RespondTile(&respond)
+				}
+			</ul>
+		</div>
+		<div></div>
+		if role=="manager" {
+			<div>
+				<form hx-post={fmt.Sprintf("/questions/%s/respond/create",question.Id)}>
+					<textarea name="respond" rows="10" cols="30"></textarea>
+					<br/>
+					<br/>
+					<input type="submit" name="respond" required/>
+				</form>
+			</div>
+		}
+		</body>
+	</html>
+}
+
+templ RespondTile(respond *types.Respond) {
+	<li>
+		<p>{ respond.RespondID }</p>
+		<p>{ respond.Body }</p>
+	</li>
+}
