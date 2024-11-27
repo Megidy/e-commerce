@@ -67,6 +67,14 @@ type OrderStore interface {
 	AddOrdersDetails(orderDetails OrderDetails) error
 	GetOrderDetails(orderID, userID string) (OrderDetails, error)
 }
+type InformationStore interface {
+	CreateQuestion(question Question) error
+	CreateRespond(respond Respond) error
+	GetAllQuestions() ([]Question, error)
+	GetSingleQuestion(questionID string) (Question, error)
+	GetAllResponds(questionID string) ([]Respond, error)
+	DeleteQuestion(questionID string) error
+}
 type Accessory struct {
 	Id          string
 	Name        string
@@ -145,4 +153,17 @@ type CartAccessoryResponse struct {
 	Accessory        *Accessory
 	Quantity         int
 	PriceOfAccessory float32
+}
+
+type Question struct {
+	Id     string
+	UserID string
+	Title  string
+	Body   string
+}
+
+type Respond struct {
+	QuestionID string
+	RespondID  string
+	Body       string
 }
