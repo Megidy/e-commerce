@@ -78,4 +78,16 @@ CREATE TABLE IF NOT EXISTS  order_details (
 	house       VARCHAR(255) NOT NULL
     );
 
+CREATE TABLE IF NOT EXISTS questions(
+	id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) ,
+    title TEXT,
+    body TEXT
+);
+
+CREATE TABLE IF NOT EXISTS responds(
+	question_id VARCHAR(255) ,
+	respond_id  TEXT,
+	body       TEXT
+);
 CREATE TABLE IF NOT EXISTS reviews();
