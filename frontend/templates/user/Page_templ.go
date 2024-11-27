@@ -34,7 +34,7 @@ func Page(nav bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if nav {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><div class=\"nav-center\"><a href=\"/products/accessories\"><i class=\"fas fa-cogs\"></i> Accessories</a> <a href=\"/products/bicycles\"><i class=\"fas fa-bicycle\"></i> Bicycles</a> <a href=\"/orders\"><i class=\"fas fa-list\"></i> My Orders</a> <a href=\"/cart\"><i class=\"fas fa-shopping-cart\"></i> My Cart</a> <a href=\"/overall\"><i class=\"fas fa-info-circle\"></i> Overall about Bicycles</a> <a href=\"/tech-support\"><i class=\"fas fa-tools\"></i> Tech-Support</a> <a href=\"/signup\"><i class=\"fas fa-user-plus\"></i> Signup</a> <a href=\"/login\"><i class=\"fas fa-sign-in-alt\"></i> Login</a></div><div class=\"nav-right\"><a href=\"/user\"><i class=\"fas fa-user-circle\"></i> Account</a></div></nav>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><div class=\"nav-center\"><a href=\"/products/accessories\"><i class=\"fas fa-cogs\"></i> Accessories</a> <a href=\"/products/bicycles\"><i class=\"fas fa-bicycle\"></i> Bicycles</a> <a href=\"/orders\"><i class=\"fas fa-list\"></i> My Orders</a> <a href=\"/cart\"><i class=\"fas fa-shopping-cart\"></i> My Cart</a> <a href=\"/information\"><i class=\"fas fa-info-circle\"></i> Overall about Bicycles</a> <a href=\"/questions\"><i class=\"fas fa-tools\"></i> Community questions</a> <a href=\"/signup\"><i class=\"fas fa-user-plus\"></i> Signup</a> <a href=\"/login\"><i class=\"fas fa-sign-in-alt\"></i> Login</a></div><div class=\"nav-right\"><a href=\"/user\"><i class=\"fas fa-user-circle\"></i> Account</a></div></nav>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
