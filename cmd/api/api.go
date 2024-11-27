@@ -7,6 +7,7 @@ import (
 	"github.com/Megidy/e-commerce/frontend/response"
 	"github.com/Megidy/e-commerce/services/auth"
 	"github.com/Megidy/e-commerce/services/cart"
+	"github.com/Megidy/e-commerce/services/information"
 	"github.com/Megidy/e-commerce/services/order"
 	"github.com/Megidy/e-commerce/services/product"
 	"github.com/Megidy/e-commerce/services/user"
@@ -34,24 +35,29 @@ func (s *APIServer) Run() error {
 	productStore := product.NewStore(s.db)
 	cartStore := cart.NewStore(s.db)
 	orderStore := order.NewStore(s.db)
+	informationStore := information.NewStore(s.db)
 
-	NewTemplateHandler := response.NewTemplateHandler()
+	TemplateHandler := response.NewTemplateHandler()
 	router.RedirectFixedPath = true
 	router.RedirectTrailingSlash = true
 
 	authHandler := auth.NewJWT(userStore)
+	managerHandler := auth.NewManager(userStore)
 
-	userHandler := user.NewHandler(NewTemplateHandler, userStore)
-	userHandler.RegisterRoutes(router, authHandler)
+	userHandler := user.NewHandler(TemplateHandler, userStore)
+	userHandler.RegisterRoutes(router, authHandler, managerHandler)
 
-	productHandler := product.NewHandler(userStore, productStore)
-	productHandler.RegisterRoutes(router)
+	productHandler := product.NewHandler(TemplateHandler, userStore, productStore)
+	productHandler.RegisterRoutes(router, authHandler, managerHandler)
 
-	cartHandler := cart.NewHandler(userStore, cartStore, productStore, NewTemplateHandler)
+	cartHandler := cart.NewHandler(userStore, cartStore, productStore, TemplateHandler)
 	cartHandler.RegisterRoutes(router, authHandler)
 
-	orderHandler := order.NewHandler(NewTemplateHandler, userStore, orderStore, productStore, cartStore)
+	orderHandler := order.NewHandler(TemplateHandler, userStore, orderStore, productStore, cartStore)
 	orderHandler.RegisterRoutes(router, authHandler)
+
+	informationHandler := information.NewHandler(TemplateHandler, userStore, informationStore)
+	informationHandler.RegisterRoutes(router, authHandler, managerHandler)
 
 	log.Println("Started Server on port :8080")
 	return router.Run(s.addr)
